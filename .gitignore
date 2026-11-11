@@ -1,0 +1,20 @@
+# Secrets: never committed
+*Token*.txt
+*Creds*.txt
+.env
+.env.*
+*.pfx
+*.pem
+/secrets/
+
+# Product repo clones and snapshots: they have their own home
+/repos/
+
+# Raw transcripts and backups can contain secrets
+/backup/
+
+# Run output: large, and screenshots can show real user data
+reports/audit.log
+reports/runs/
+reports/headless/
+reports/browser/

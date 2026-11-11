@@ -1,0 +1,12 @@
+{
+  "network": {
+    "blockedOrigins": [
+      "https://app.busplanner.ca",
+      "https://app.busplanner.com",
+      "https://bpu-app.busplannerweb.com",
+      "https://bpu-api.busplannerweb.com",
+      "https://bpu-us-prod-app.busplannerweb.com",
+      "https://bpu-us-prod-api.busplannerweb.com"
+    ]
+  }
+}

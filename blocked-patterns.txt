@@ -1,0 +1,15 @@
+# BusPlanner protected patterns. Loaded by the core guard (.claude/hooks/env-guard.ps1)
+# together with the core generic list, which already covers "*-prod*" names,
+# destructive SQL and force pushes. One regular expression per line.
+
+# BusPlanner Unified production (CA and US). Source: Confluence space PE, 2026-11-10
+(?i)\bapp\.busplanner\.(ca|com)\b
+# Production identifiers from the repo's pipelines, deploy and infra files (commit 0137276).
+(?i)\bbpu-(api|app)\.busplannerweb\.com\b
+(?i)BusPlanner_Prod\b
+\b10\.51\.0\.11\b
+# Production SQL public (floating) IP, from the IBM Cloud console screenshot 2026-11-10
+\b163\.66\.89\.202\b
+E270CTV1Q2LKLM
+# Internal monitoring hosts; production status unverified, blocked to be safe
+(?i)(tracker|dispatch)monitoring\.sweden\.georef\.local
