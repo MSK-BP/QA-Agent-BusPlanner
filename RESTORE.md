@@ -22,6 +22,12 @@ Not in git, so keep a copy elsewhere (OneDrive or a password manager):
    cd "QA Agent"
    git clone https://github.com/MSK-BP/QA-Agent-BusPlanner.git tenants\busplanner
    ```
+   Sign in to both GitHub accounts with the GitHub CLI: run `gh auth login --web` twice, approving the code once in the MSK100 browser profile and once in the MSK-BP one. Then make each repo always use its own account, whichever is active in `gh`, by adding this to `.git\config` (core: `MSK100`) and `tenants\busplanner\.git\config` (`MSK-BP`):
+   ```
+   [credential "https://github.com"]
+   	helper =
+   	helper = "!f() { test \"$1\" = get || exit 0; echo username=MSK-BP; echo password=$('C:/Program Files/GitHub CLI/gh.exe' auth token --user MSK-BP); }; f"
+   ```
 2. Put `Infra Creds.txt` and `backup\` back into `tenants\busplanner\`.
 3. Run the setup. It installs Git, Node and the Playwright browser server, activates the tenant, then runs `tenants\busplanner\harness\setup.ps1` (.NET 8, Node 22, SSMS, OpenVPN, Claude memory restore):
    ```
