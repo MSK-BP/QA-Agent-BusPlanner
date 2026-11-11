@@ -5,7 +5,7 @@ The QA hub is two git repositories:
 | Part | Where it lives | Holds |
 |---|---|---|
 | Core | `MSK100/QA-Agent` (GitHub, private) | `CLAUDE.md`, `.claude/` (skills, agents, hooks), `harness/`, `templates/` |
-| This tenant | BusPlanner GitHub account, private repo (URL: TODO once created) | `TENANT.md`, `knowledge/`, `blocked-patterns.txt`, `playwright.json`, `harness/` (ado, unified, creds, setup), `reports/` |
+| This tenant | `MSK-BP/QA-Agent-BusPlanner` (GitHub, private) | `TENANT.md`, `knowledge/`, `blocked-patterns.txt`, `playwright.json`, `harness/` (ado, unified, creds, setup), `reports/` |
 
 Not in git, so keep a copy elsewhere (OneDrive or a password manager):
 
@@ -20,7 +20,7 @@ Not in git, so keep a copy elsewhere (OneDrive or a password manager):
    ```
    git clone https://github.com/MSK100/QA-Agent.git "QA Agent"
    cd "QA Agent"
-   git clone <busplanner tenant repo url> tenants\busplanner
+   git clone https://github.com/MSK-BP/QA-Agent-BusPlanner.git tenants\busplanner
    ```
 2. Put `Infra Creds.txt` and `backup\` back into `tenants\busplanner\`.
 3. Run the setup. It installs Git, Node and the Playwright browser server, activates the tenant, then runs `tenants\busplanner\harness\setup.ps1` (.NET 8, Node 22, SSMS, OpenVPN, Claude memory restore):
