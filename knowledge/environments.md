@@ -32,13 +32,16 @@ Source: IBM Cloud console, VPC virtual server instances, Toronto, filter `k8` (u
 SSMS on this machine (2026-11-12) has saved connections from Dan's earlier setup: `10.50.0.4`, `10.50.0.5` and `10.51.0.11` as login `dan`, and `10.52.200.5` as `sa`. Never use these. The `10.51.0.11` entry is **production**, and `sa` is the server admin. Connect as `sharaiz` only, to dev or staging. TODO: ask Dan what `10.52.200.5` is (US SQL? Old World?).
 
 Rules:
-- The agent never types or stores the SQL password. The user runs `harness\set-sql-password.ps1` (with `powershell -ExecutionPolicy Bypass -File ...`, since script execution is disabled on this machine). It asks for the password with hidden input and stores it in the user environment variable `BP_QA_SQL_PASSWORD`.
+- The agent never types or stores the SQL password. The user runs `harness\set-sql-password.ps1 -Env dev|staging` (with `powershell -ExecutionPolicy Bypass -File ...`, since script execution is disabled on this machine). It asks for the password with hidden input and stores it in the user environment variable `BP_QA_SQL_PASSWORD_DEV` or `_STAGING`. Without `-Env` it sets `BP_QA_SQL_PASSWORD`, which serves as the fallback; staging currently uses it. Dev and staging have different passwords.
 - The agent queries through `harness\sql.ps1 -Env dev|staging -Action ping|databases|query`. It reaches only these two IPs, accepts only SELECT/WITH, runs each query in a transaction that is always rolled back, and shows at most 200 rows.
 - Login status 2026-11-12:
   - **Staging: connected** through `sql.ps1` after the password change. The server reports itself as `k8-staging-mssql`, SQL Server 16.0.4255.1 (2022), Developer Edition. The `sharaiz` login is **sysadmin** (also dbcreator and securityadmin), so the server enforces nothing. Read-only depends entirely on `sql.ps1` and on the user's own care in SSMS.
   - Staging databases: `BP_Unified_HRCE`, `BP_Unified_NPSSTS`, `BP_Unified_NSTS`, `BP_Unified_OSTA`, `BP_Unified_STSBHN` (one per CA staging client), `Client_Registry`, `BusPlanner_Staging`, `STSBHN_20262027_LIVE_2026_10_22` (by its name, a snapshot of live STSBHN data; treat it as real customer data).
   - The US staging clients (`NCPS`, `YSD`) have **no database on this server**. Their SQL server is not yet identified (possibly `10.52.200.5`, see above).
-  - Dev: "Login failed" with no reason. The user doesn't have the password; Dan needs to reset it, or create the login on dev.
+  - **Dev: connected** 2026-11-12, with a password separate from staging's (`BP_QA_SQL_PASSWORD_DEV`). The server reports itself as `k8-mssql`, SQL Server 16.0.4250.1 (2022), Developer Edition. `sharaiz` is **sysadmin** here too.
+  - Dev databases (54): versioned Unified databases `BusPlanner_Unified_7_<ver>[_<CLIENT>]`, the newest being `7_21_*` for about 20 clients, CA and US alike (e.g. HRCE, OSTA, YSD, PGCPS, HCPS, SAPS); feature databases (`_Chatbot_SDCC`, `_ChatbotEval_HRCE`, `_GpsPlus_*`, `_TimeAndAttendance`); `Client_Registry` and `Client_Registry_Local`; per-developer `T&A_<name>`; and BP Pro restores named after customers (`STSBHN_20252026_LIVE*`, `SDCC_*`, `P_US_MD_PGCPS_SUMMER_*`).
+  - **Dev also holds real customer data**: the `*_LIVE*` and plan/summer restores are customer copies. Hard rule 5 applies to them as it does on staging.
+  - Which database each dev client uses: read it from `Client_Registry`, never guess from the name.
 - Integration tests create and drop databases: dev only, with `BP_TEST_DB_SUFFIX` set, and only when the user names the server (hard rule 2).
 - Never run writes, DDL or `DROP` on staging.
 

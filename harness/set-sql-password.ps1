@@ -1,25 +1,37 @@
 <#
 .SYNOPSIS
   Run this yourself (not the agent). Prompts for your SQL login password with
-  hidden input and stores it in the user environment variable
-  BP_QA_SQL_PASSWORD, which harness\sql.ps1 reads. Nothing is printed or
-  written to the hub.
+  hidden input and stores it in a user environment variable that
+  harness\sql.ps1 reads. Nothing is printed or written to the hub.
+
+  -Env dev      -> BP_QA_SQL_PASSWORD_DEV
+  -Env staging  -> BP_QA_SQL_PASSWORD_STAGING
+  (no -Env)     -> BP_QA_SQL_PASSWORD, used for any server without its own
+
+  Script execution is disabled on this machine, so run it as:
+    powershell -ExecutionPolicy Bypass -File .\harness\set-sql-password.ps1 -Env dev
 
 .EXAMPLE
-  .\harness\set-sql-password.ps1
-  .\harness\set-sql-password.ps1 -Clear
+  .\harness\set-sql-password.ps1 -Env dev
+  .\harness\set-sql-password.ps1 -Env staging -Clear
 #>
-param([switch] $Clear)
+param(
+    [ValidateSet('dev', 'staging')] [string] $Env,
+    [switch] $Clear
+)
+
+$name = if ($Env) { "BP_QA_SQL_PASSWORD_$($Env.ToUpper())" } else { 'BP_QA_SQL_PASSWORD' }
 
 if ($Clear) {
-    [Environment]::SetEnvironmentVariable('BP_QA_SQL_PASSWORD', $null, 'User')
-    'BP_QA_SQL_PASSWORD removed.'
+    [Environment]::SetEnvironmentVariable($name, $null, 'User')
+    "$name removed."
     exit 0
 }
 
-$sec = Read-Host -AsSecureString 'SQL password for login sharaiz'
+$label = if ($Env) { "$Env " } else { '' }
+$sec = Read-Host -AsSecureString "SQL ${label}password for login sharaiz"
 $plain = [Runtime.InteropServices.Marshal]::PtrToStringBSTR([Runtime.InteropServices.Marshal]::SecureStringToBSTR($sec))
 if (-not $plain) { Write-Error 'Empty password, nothing stored.'; exit 1 }
-[Environment]::SetEnvironmentVariable('BP_QA_SQL_PASSWORD', $plain, 'User')
+[Environment]::SetEnvironmentVariable($name, $plain, 'User')
 $plain = $null
-'Stored in user environment variable BP_QA_SQL_PASSWORD.'
+"Stored in user environment variable $name."

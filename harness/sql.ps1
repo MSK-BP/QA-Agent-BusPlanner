@@ -2,7 +2,8 @@
 .SYNOPSIS
   Read-only SQL Server helper for the Unified dev and staging servers (CA VPN).
   Login and server come from this script; the password from the user
-  environment variable BP_QA_SQL_PASSWORD (set by the user with
+  environment variable BP_QA_SQL_PASSWORD_DEV or BP_QA_SQL_PASSWORD_STAGING,
+  falling back to BP_QA_SQL_PASSWORD (set by the user with
   harness\set-sql-password.ps1). The password is never printed.
 
   Only SELECT / WITH queries are accepted, and each runs inside a transaction
@@ -25,9 +26,14 @@ param(
 $servers = @{ dev = '10.50.0.4'; staging = '10.50.0.5' }
 $server = $servers[$Env]
 
-$pw = $env:BP_QA_SQL_PASSWORD
-if (-not $pw) { $pw = [Environment]::GetEnvironmentVariable('BP_QA_SQL_PASSWORD', 'User') }
-if (-not $pw) { Write-Error 'BP_QA_SQL_PASSWORD is not set. Run harness\set-sql-password.ps1 yourself.'; exit 1 }
+# Per-server password first (BP_QA_SQL_PASSWORD_DEV / _STAGING), then the shared one.
+$pw = $null
+foreach ($n in @("BP_QA_SQL_PASSWORD_$($Env.ToUpper())", 'BP_QA_SQL_PASSWORD')) {
+    $pw = [Environment]::GetEnvironmentVariable($n, 'Process')
+    if (-not $pw) { $pw = [Environment]::GetEnvironmentVariable($n, 'User') }
+    if ($pw) { break }
+}
+if (-not $pw) { Write-Error "No SQL password for $Env. Run harness\set-sql-password.ps1 -Env $Env yourself."; exit 1 }
 
 switch ($Action) {
     'ping'      { $Query = "SELECT @@SERVERNAME AS server_name, SERVERPROPERTY('ProductVersion') AS version, SERVERPROPERTY('Edition') AS edition, SUSER_SNAME() AS login_name, DB_NAME() AS current_db" }
