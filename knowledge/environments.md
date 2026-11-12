@@ -85,7 +85,7 @@ The browser itself is core (see the hub `README.md`: Playwright MCP, pinned, Chr
 
 - **Blocked origins:** the six production app and API origins in `playwright.json` (this tenant's root). `harness\use-tenant.ps1 busplanner` writes them into the browser config. Blocking was tested 2026-11-12 with a throwaway blocked origin: the navigation failed as intended.
 - **Guard:** the core hook blocks any `mcp__playwright__browser_*` call whose input names a host in `blocked-patterns.txt` (tested 2026-11-12: prod CA and US blocked, dev and staging allowed). Neither layer stops a server-side redirect; stop and report if one ever lands on production.
-- **Signing in:** the agent never types a password. The user signs in in the Playwright window with the staging QA account (above). A server restart or the 60-minute token expiry means signing in again.
+- **Signing in:** the agent never types a password. The user signs in in the Playwright window with the staging QA account (above). Since 2026-11-12 the browser profile persists (`%LOCALAPPDATA%\qa-agent\browser-profiles\busplanner`), so a sign-in survives a session restart. The 60-minute token expiry still means signing in again. UNVERIFIED: whether the app keeps its token somewhere the profile saves (cookie or localStorage) or only in memory; check after the first restart.
 - **Smoke check:** US staging app loads with title "Time & Attendance" (2026-11-12).
 - **Evidence:** screenshots go to `reports/browser/`, which is not committed. Do not capture student, parent, driver or employee details (hard rule 5); pick screens that show only `QA-AUTO-` or synthetic data.
 - **Locators:** the app has no `data-testid`; use role and accessible name (`knowledge/repos/BusPlannerUnified/frontend.md` section 10).
