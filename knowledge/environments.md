@@ -20,14 +20,25 @@ Which environment you are on: `GET https://<app-host>/config.json` returns the A
 
 From Dan Sukhram (DevOps Architect), Slack 2026-11-10, and the IBM Cloud console. Reach them over the CA VPN (OpenVPN Connect) on their private IPs, port 1433, SQL authentication, login `sharaiz`. The password lives with the user, never in this hub.
 
-| Server | Private IP | Network | Environment | Agent may connect |
-|---|---|---|---|---|
-| `k8-mssql` | 10.50.0.4 | `k8-dev-vpc`, RG `Default` | dev | yes, when the user supplies a connection; reachable over VPN (checked 2026-11-10) |
-| `k8-staging-mssql` | 10.50.0.5 | `k8-dev-vpc`, RG `k8-dev` | staging (real customer data) | read-only queries only, when the user asks; reachable over VPN (checked 2026-11-10) |
-| `k8-prod-mssql` | 10.51.0.11 | `k8-prod-vpc`, RG `k8-prod-ca` | **production** | **never**: private and public IPs are in the guard's blocklist |
+| Server | Private IP | Floating (public) IP | Network | Environment | Agent may connect |
+|---|---|---|---|---|---|
+| `k8-mssql` | 10.50.0.4 | 163.66.84.14 | `k8-dev-vpc`, RG `Default` | dev | yes, when the user supplies a connection; reachable over VPN (checked 2026-11-10) |
+| `k8-staging-mssql` | 10.50.0.5 | 163.66.89.183 | `k8-dev-vpc`, RG `k8-dev` | staging (real customer data) | read-only queries only, when the user asks; reachable over VPN (checked 2026-11-10) |
+| `k8-prod-mssql` | 10.51.0.11 | 163.66.89.202 | `k8-prod-vpc`, RG `k8-prod-ca` | **production** | **never**: private and public IPs are in the guard's blocklist |
+| unknown | 10.52.200.5 | ? | unknown (not a `k8-` VPC in Toronto) | **unknown, possibly US** | **no** until identified; blocked in the guard to be safe |
+
+Source: IBM Cloud console, VPC virtual server instances, Toronto, filter `k8` (user screenshot 2026-11-12). Use the private IPs over the VPN; the floating IPs are for reference only.
+
+SSMS on this machine (2026-11-12) has saved connections from Dan's earlier setup: `10.50.0.4`, `10.50.0.5` and `10.51.0.11` as login `dan`, and `10.52.200.5` as `sa`. Never use these. The `10.51.0.11` entry is **production**, and `sa` is the server admin. Connect as `sharaiz` only, to dev or staging. TODO: ask Dan what `10.52.200.5` is (US SQL? Old World?).
 
 Rules:
-- The agent never types or stores the SQL password. If the user wants the agent to query dev or staging, they put the connection in an environment variable themselves.
+- The agent never types or stores the SQL password. The user runs `harness\set-sql-password.ps1` (with `powershell -ExecutionPolicy Bypass -File ...`, since script execution is disabled on this machine). It asks for the password with hidden input and stores it in the user environment variable `BP_QA_SQL_PASSWORD`.
+- The agent queries through `harness\sql.ps1 -Env dev|staging -Action ping|databases|query`. It reaches only these two IPs, accepts only SELECT/WITH, runs each query in a transaction that is always rolled back, and shows at most 200 rows.
+- Login status 2026-11-12:
+  - **Staging: connected** through `sql.ps1` after the password change. The server reports itself as `k8-staging-mssql`, SQL Server 16.0.4255.1 (2022), Developer Edition. The `sharaiz` login is **sysadmin** (also dbcreator and securityadmin), so the server enforces nothing. Read-only depends entirely on `sql.ps1` and on the user's own care in SSMS.
+  - Staging databases: `BP_Unified_HRCE`, `BP_Unified_NPSSTS`, `BP_Unified_NSTS`, `BP_Unified_OSTA`, `BP_Unified_STSBHN` (one per CA staging client), `Client_Registry`, `BusPlanner_Staging`, `STSBHN_20262027_LIVE_2026_10_22` (by its name, a snapshot of live STSBHN data; treat it as real customer data).
+  - The US staging clients (`NCPS`, `YSD`) have **no database on this server**. Their SQL server is not yet identified (possibly `10.52.200.5`, see above).
+  - Dev: "Login failed" with no reason. The user doesn't have the password; Dan needs to reset it, or create the login on dev.
 - Integration tests create and drop databases: dev only, with `BP_TEST_DB_SUFFIX` set, and only when the user names the server (hard rule 2).
 - Never run writes, DDL or `DROP` on staging.
 

@@ -11,5 +11,7 @@
 # Production SQL public (floating) IP, from the IBM Cloud console screenshot 2026-11-10
 \b163\.66\.89\.202\b
 E270CTV1Q2LKLM
+# Unidentified SQL server seen in SSMS history (login sa), 2026-11-12. Blocked until confirmed non-production.
+\b10\.52\.200\.5\b
 # Internal monitoring hosts; production status unverified, blocked to be safe
 (?i)(tracker|dispatch)monitoring\.sweden\.georef\.local
