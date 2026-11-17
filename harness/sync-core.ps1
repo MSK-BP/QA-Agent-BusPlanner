@@ -99,7 +99,7 @@ try {
                 }
             }
         }
-        $added = (Get-Content $patchFile | Where-Object { $_ -match '^\+' -and $_ -notmatch '^\+\+\+ ' }) + $message
+        $added = @(Get-Content $patchFile | Where-Object { $_ -match '^\+' -and $_ -notmatch '^\+\+\+ ' }) + @($message -split "`n")
         $hits = foreach ($r in $rules) { $added | Where-Object { $_ -match "(?i)$r" } | ForEach-Object { "  [$r] $_" } }
         if ($hits) { throw "Stopped: tenant data found in the change for the core repository.`n$(($hits | Select-Object -Unique) -join "`n")" }
 
