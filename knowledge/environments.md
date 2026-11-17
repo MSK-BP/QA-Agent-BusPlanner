@@ -90,7 +90,7 @@ The browser itself is core (see the hub `README.md`: Playwright MCP, pinned, Chr
 - **Guard:** the core hook blocks any `mcp__playwright__browser_*` call whose input names a host in `blocked-patterns.txt` (tested 2026-11-12: prod CA and US blocked, dev and staging allowed). Neither layer stops a server-side redirect; stop and report if one ever lands on production.
 - **Signing in:** the agent never types a password. The user signs in in the Playwright window with the staging QA account (above). Since 2026-11-12 the browser profile persists (`%LOCALAPPDATA%\qa-agent\browser-profiles\busplanner`), so a sign-in survives a session restart. The 60-minute token expiry still means signing in again. UNVERIFIED: whether the app keeps its token somewhere the profile saves (cookie or localStorage) or only in memory; check after the first restart.
 - **Smoke check:** US staging app loads with title "Time & Attendance" (2026-11-12).
-- **Evidence:** screenshots go to `reports/browser/`, which is not committed. Do not capture student, parent, driver or employee details (hard rule 5); pick screens that show only `QA-AUTO-` or synthetic data.
+- **Evidence:** screenshots go to the run folder `C:\Users\skhan\Repos\qa-runs\busplanner\browser\` (outside OneDrive, never committed). Do not capture student, parent, driver or employee details (hard rule 5); pick screens that show only `QA-AUTO-` or synthetic data.
 - **Locators:** the app has no `data-testid`; use role and accessible name (`knowledge/repos/BusPlannerUnified/frontend.md` section 10).
 - The desktop app's own browser pane also exists for quick looks. Use Playwright for test sessions, since sub-agents can use it and the guard covers it.
 

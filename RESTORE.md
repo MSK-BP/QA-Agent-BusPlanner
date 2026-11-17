@@ -12,7 +12,7 @@ Not in git, so keep a copy elsewhere (OneDrive or a password manager):
 - `Infra Creds.txt`: plain-text secrets. Better: move them to a password manager.
 - `backup/claude/`: Claude's memory and the 2026-11-10 build-out session. The raw session contains secrets.
 - `repos/`: the BusPlannerUnified snapshot. Re-clone it from Azure DevOps instead (org `busplanner`, project `BusPlanner Unified`).
-- `reports/audit.log`, `reports/browser/`: local run output.
+- Run output (`audit.log`, `browser/`, `runs/`, `headless/`): in `C:\Users\skhan\Repos\qa-runs\busplanner\`, outside OneDrive. After a restore, run `harness\use-tenant.ps1 busplanner -RunRoot C:\Users\skhan\Repos\qa-runs` from the hub, and clone the product repos again into `C:\Users\skhan\Repos\` with `harness\git-ado.ps1`.
 
 ## Steps
 
