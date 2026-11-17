@@ -40,18 +40,18 @@ $CoreRepo = (Resolve-Path $CoreRepo).Path
 $stateFile = Join-Path $hub '.local\core-sync.json'
 $corePaths = @('--', '.', ':(exclude,glob)tenants/*/**', ':(exclude).gitignore')
 
-function Git([string] $repo) {
-    $out = & git -C $repo @args
+function Invoke-Git([string] $repo) {
+    $out = & git.exe -C $repo @args
     if ($LASTEXITCODE -ne 0) { throw "git -C $repo $args failed." }
     $out
 }
-function Head([string] $repo) { (Git $repo rev-parse HEAD) | Select-Object -First 1 }
+function Head([string] $repo) { (Invoke-Git $repo rev-parse HEAD) | Select-Object -First 1 }
 function Assert-Clean([string] $repo, [string] $label) {
-    $dirty = Git $repo status --porcelain @corePaths
+    $dirty = Invoke-Git $repo status --porcelain @corePaths
     if ($dirty) { throw "$label has uncommitted core changes. Commit or discard them first:`n$($dirty -join "`n")" }
 }
 
-if ((Git $CoreRepo ls-files -- 'tenants/*/*' | Where-Object { $_ })) {
+if ((Invoke-Git $CoreRepo ls-files -- 'tenants/*/*' | Where-Object { $_ })) {
     throw "$CoreRepo tracks tenant files. It must be the core-only repository."
 }
 
@@ -64,8 +64,8 @@ if ($Init) {
 if (-not (Test-Path $stateFile)) { throw "No sync point on this machine. Run with -Init once, when both sides have the same core files." }
 $state = Get-Content $stateFile -Raw | ConvertFrom-Json
 
-$waitingHere = @(Git $hub log --format='%h %s' "$($state.combined)..HEAD" @corePaths | Where-Object { $_ })
-$waitingCore = @(Git $CoreRepo log --format='%h %s' "$($state.core)..HEAD" -- . ':(exclude).gitignore' | Where-Object { $_ })
+$waitingHere = @(Invoke-Git $hub log --format='%h %s' "$($state.combined)..HEAD" @corePaths | Where-Object { $_ })
+$waitingCore = @(Invoke-Git $CoreRepo log --format='%h %s' "$($state.core)..HEAD" -- . ':(exclude).gitignore' | Where-Object { $_ })
 
 if ($Direction -eq 'Status') {
     "Core changes here, not yet in the core repository: $($waitingHere.Count)"
@@ -83,7 +83,7 @@ try {
         if (-not $waitingHere) { 'Nothing to copy to the core repository.'; return }
         Assert-Clean $hub 'This repository'
         Assert-Clean $CoreRepo 'The core repository'
-        Git $hub diff --binary "--output=$patchFile" $state.combined HEAD @corePaths | Out-Null
+        Invoke-Git $hub diff --binary "--output=$patchFile" $state.combined HEAD @corePaths | Out-Null
         $message = "Sync core changes`n`n" + (($waitingHere | ForEach-Object { '- ' + ($_ -replace '^\S+ ', '') }) -join "`n")
 
         # Leak guard: added lines and the message must not carry tenant data.
@@ -103,26 +103,26 @@ try {
         $hits = foreach ($r in $rules) { $added | Where-Object { $_ -match "(?i)$r" } | ForEach-Object { "  [$r] $_" } }
         if ($hits) { throw "Stopped: tenant data found in the change for the core repository.`n$(($hits | Select-Object -Unique) -join "`n")" }
 
-        Git $CoreRepo apply --3way --whitespace=nowarn $patchFile | Out-Null
-        Git $CoreRepo add -A | Out-Null
+        Invoke-Git $CoreRepo apply --3way --whitespace=nowarn $patchFile | Out-Null
+        Invoke-Git $CoreRepo add -A | Out-Null
         [IO.File]::WriteAllText($msgFile, $message, $utf8)
-        Git $CoreRepo commit -q -F $msgFile | Out-Null
+        Invoke-Git $CoreRepo commit -q -F $msgFile | Out-Null
         $state.combined = Head $hub
         $state.core = Head $CoreRepo
-        "Committed in the core repository: $(Git $CoreRepo log --oneline -1). Not pushed."
+        "Committed in the core repository: $(Invoke-Git $CoreRepo log --oneline -1). Not pushed."
     }
     else {
         if (-not $waitingCore) { 'Nothing to copy from the core repository.'; return }
         Assert-Clean $hub 'This repository'
-        Git $CoreRepo diff --binary "--output=$patchFile" $state.core HEAD -- . ':(exclude).gitignore' | Out-Null
-        Git $hub apply --3way --whitespace=nowarn $patchFile | Out-Null
-        Git $hub add -A @corePaths | Out-Null
+        Invoke-Git $CoreRepo diff --binary "--output=$patchFile" $state.core HEAD -- . ':(exclude).gitignore' | Out-Null
+        Invoke-Git $hub apply --3way --whitespace=nowarn $patchFile | Out-Null
+        Invoke-Git $hub add -A @corePaths | Out-Null
         $message = "Sync core changes`n`n" + (($waitingCore | ForEach-Object { '- ' + ($_ -replace '^\S+ ', '') }) -join "`n")
         [IO.File]::WriteAllText($msgFile, $message, $utf8)
-        Git $hub commit -q -F $msgFile | Out-Null
+        Invoke-Git $hub commit -q -F $msgFile | Out-Null
         $state.combined = Head $hub
         $state.core = Head $CoreRepo
-        "Committed here: $(Git $hub log --oneline -1). Not pushed."
+        "Committed here: $(Invoke-Git $hub log --oneline -1). Not pushed."
     }
     $state | ConvertTo-Json | Set-Content $stateFile -Encoding utf8
 }
