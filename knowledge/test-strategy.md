@@ -75,3 +75,14 @@ Skipped is not passed: a green PR run includes a block of skipped tests. More pa
 - Component: permission-gated UI, a11y sweeps, date display in district time zone.
 - End-to-end (to be built): login with org picker, clock in → approve → close period → export, GPS+ Live Viewer, chatbot ask with a gated tool.
 - Eval: chatbot answer quality and decline behaviour.
+
+
+## New modules before a framework exists (decided 2026-11-16)
+
+The QA lead decided: no new automation framework before 18 December 2026. New modules, starting with Ride Support, are tested agentically with this hub. Design: `reports/2026-11-16-agentic-test-approach.md` (design only; the new skills and agents are not built yet).
+
+- Cases: markdown files in this tenant at `tests/<module>/<flow>/<case-id>.md`; a pull request approves them.
+- Channels: browser (Playwright), API (guarded helper, to build), SQL (`harness/sql.ps1`), device (Appium MCP on an Android emulator or tablet, for Turns). All channels are agentic; no manual channel (decided 2026-11-17). Testing runs on dev; no separate test client.
+- Every verdict is checked by an independent verifier agent against the evidence.
+- Developers keep writing their own unit and component tests in BusPlannerUnified.
+- After Dec 18, stable cases are converted into code for the BP Unified framework.

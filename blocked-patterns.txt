@@ -15,3 +15,12 @@ E270CTV1Q2LKLM
 \b10\.52\.200\.5\b
 # Internal monitoring hosts; production status unverified, blocked to be safe
 (?i)(tracker|dispatch)monitoring\.sweden\.georef\.local
+
+# Mobile apps (Apps repo, read 2026-11-17). The access-code directory every app calls first,
+# customer Chipmunk trackers, and the production map tile server.
+(?i)\bappapi\.busplannerweb\.com\b
+(?i)\b[a-z0-9-]+\.mybusplanner\.(ca|com)\b
+# Old World repo (read 2026-11-17): customer tools sites, GPS locator, release FTP.
+(?i)\b[a-z0-9-]+\.busplannertools\.com\b
+(?i)\blocator\.busplanner\.com\b
+(?i)\bftp\.busplanner\.com\b

@@ -14,6 +14,10 @@ Last built 2026-11-10. Code knowledge is from static reading of `BusPlannerUnifi
 | environments.md | Environment URLs, what is allowed, hard rules, BusPlanner browser specifics | Unified filled; dev and staging approved 2026-11-10; Playwright set up 2026-11-12; QA1/QA2 URLs missing |
 | test-strategy.md | Suites and commands, gates, gaps, flaky list | Unified filled; commands unverified by execution |
 | conventions.md | House style for backend, front-end and manual tests | Unified filled |
+| access.md | What the agent can reach (ADO, GitHub, Atlassian, Slack, M365, local tools) and what needs a team member | 2026-11-16 |
+| repos/Apps.md | Turns, Chipmunk, Delays, Subs (.NET MAUI): layout, tap-on path, offline sync, server selection, tests, CI, risks for Ride Support | 2026-11-17, read from code |
+| repos/QA_Automation.md | Existing Playwright (JS) suite for Old World Fleet work and purchase orders on QA2 | 2026-11-17 |
+| repos/BusPlanner.md | Old World monorepo (`Unmanaged/BusPlanner`): top-level map | 2026-11-17 |
 | repos/BusPlannerUnified.md | Repo map and index to the five detailed maps | filled |
 | repos/BusPlannerUnified/*.md | backend-core, chatbot, data-services, frontend, tests-ci-infra | filled, each lists what it could not determine |
 | repos/BusPlannerUnified/ta-requirements.md | T&A PRD v1.9 requirements, calculations, state machines, spec-vs-code gaps | from the repo's Word docs, 2026-11-10 |
@@ -33,10 +37,10 @@ Last built 2026-11-10. Code knowledge is from static reading of `BusPlannerUnifi
 
 ## Known holes
 
-- Old World products: no repo access yet, no environment URLs (QA1/QA2 hosts are in no Confluence page).
+- Old World products and the Apps repo (Turns, Chipmunk): no repo access (checked 2026-11-16, `access.md`), no environment URLs (QA1/QA2 hosts are in no Confluence page).
 - Not documented anywhere: definition of done, test strategy or regression checklist, severity/priority definitions, QA team roster.
 - Jira: every issue read (see jira/README.md for depth per slice); attachments and change history not read.
 - Slack: the account is in two general channels only.
 - `.docx` specs: the current ones are read (text extracted to `repos/BusPlannerUnified/_docx_text/` by `harness/docx2txt.ps1`); the superseded versions under `archive/` were not.
 - Test accounts for dev and staging, and which SQL Server QA may use.
-- No test has been executed; `dotnet` and `git` are not installed here. Node v26.13.1 is (2026-11-12), used for the Playwright browser.
+- No test has been executed. Since 2026-11-16 git 2.56, .NET SDK 10.0.404, Node, Python 3.15 and the GitHub CLI are installed; no Java or Android SDK.

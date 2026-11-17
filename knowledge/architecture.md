@@ -1,6 +1,6 @@
 # Architecture
 
-> Status: BusPlanner Unified filled 2026-11-10 from the repo at commit `0137276` (static reading) and the Azure DevOps API. Old World systems are known only from Confluence (`domain.md`); their repos are not onboarded. Detail lives in `repos/BusPlannerUnified/*.md`.
+> Status: BusPlanner Unified filled 2026-11-10 from the repo at commit `0137276` (static reading) and the Azure DevOps API. Old World and the mobile apps were mapped from code on 2026-11-17 (`repos/BusPlanner.md`, `repos/Apps.md`). Detail lives in `repos/BusPlannerUnified/*.md`.
 
 ## Systems
 
@@ -16,7 +16,8 @@
 | Stop classification | classifies GPS events against planned stops | `BPStopClassificationService` | .NET |
 | Client registry | catalog of clients, databases and feature flags | `BPClientRegistry`, `Client_Registry` database | SQL Server |
 | Migration tool | applies schema migrations (75 so far) | `BusPlanner.MigrationTool` | .NET CLI |
-| Old World | BP Pro, BP Web, BP Quick, Fleet, Trips, Turns, Chipmunk, trackers, BPInfo REST | not onboarded | see `domain.md` |
+| Turns, Chipmunk | driver tablet, parent app | `Managed/Apps`: `MauiTurns`, `MauiChipmunk` | .NET MAUI 10, Android and iOS; SQLite (SQLCipher) offline store; Sentry; `repos/Apps.md` |
+| Old World | BP Pro, BP Web, BP Quick, Fleet, Trips, trackers, BPInfo REST | `Unmanaged/BusPlanner` monorepo: `Managed/` (.NET Framework 4.8 web, services, BPInfo REST) and `Unmanaged/` (C++ BP Pro) | `repos/BusPlanner.md`, `domain.md` |
 
 ## How a request flows
 
@@ -44,7 +45,11 @@ Browser → SPA (object storage behind a CDN) → API ingress → JWT validated 
 - Azure DevOps org `busplanner`, project `BusPlanner Unified`, one repo `BusPlannerUnified`. Branches `dev` → `staging` → `main`. No Azure Test Plans.
 - 15 pipelines, defined in `pipelines/`: PR validation for backend and front end, deploys to dev (automatic on merge), staging and production (manual), service deploys (ETL, GPS reader, substitution import, stop classification), `Chatbot-Eval` (manual), `Claude-Code-Review` (AI review plus branch guard).
 - Read pipelines, builds and PRs with `harness/ado.ps1 <api path>` (GET only).
-- Deployment mechanism for staging and production: docs say ArgoCD, newer pipelines say kubectl. UNVERIFIED.
+- Deployment mechanism for staging and production: **kubectl** (`backend-deploy-staging.yml`, `backend-deploy-prod.yml`); the ArgoCD template and overlays exist but no pipeline uses them (read 2026-11-12).
+- Each environment **rebuilds from its own branch** (`imageTag = Build.SourceVersion`); prod is manual on `main`. Images and the FE bundle are env-agnostic (config injected at deploy).
+- FE staging/prod region default is `us`, BE default is `canada`. Service pipelines (GPS reader, substitution import, stop classification) deploy any branch to the chosen env on a manual run.
+- Cadence (ADO, 2026-11-12): ~20 PRs/week into `dev`; prod deployed Sep 17, Oct 9, Oct 21; 70 dev merges unreleased since Oct 22. One feature PR merged straight into `main` on 2026-11-03 (ENG-2963). Unified `dev` has no QA required-reviewer policy.
+- Branching proposal for the GitHub move: `reports/2026-11-12-branching-strategy.md`.
 
 ## Infrastructure
 

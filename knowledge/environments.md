@@ -47,7 +47,7 @@ Rules:
 
 ## Old World (BusPlanner Main, Fleet)
 
-QA1 (built from `dev`) and QA2 (built from `stage`) exist per Confluence (`knowledge/process.md`), but their URLs are not in any source read. TODO: ask the QA team.
+QA1 (built from `dev`) and QA2 (built from `stage`) exist per Confluence (`knowledge/process.md`). Found 2026-11-17 in `Managed/QA_Automation`: QA2 for client 1230 is `1230webqa2.busplannerweb.com` (Fleet). The Apps tests name beta hosts `<client>turnsbeta1.busplannerweb.com` and `<client>stsbhnbeta1.busplannerweb.com:9000` (`repos/Apps.md`). **None of these is approved yet.** TODO: QA1 hosts, the host pattern per client, and the user's approval before any test there.
 
 ## Hard rules for non-production environments
 
