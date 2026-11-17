@@ -7,7 +7,9 @@
       "Read(./**/.env.*)",
       "Read(./**/*.pfx)",
       "Read(./**/*.pem)",
-      "Read(./**/secrets/**)",
+      "Read(./**/secrets/**)"
+    ],
+    "ask": [
       "Bash(git push:*)",
       "PowerShell(git push:*)"
     ]
