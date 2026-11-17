@@ -5,11 +5,11 @@
   written to a git config file, a remote URL or the command line.
 
 .EXAMPLE
-  .\harness\git-ado.ps1 clone https://dev.azure.com/BusPlanner/Managed/_git/Apps C:\Users\skhan\Repos\Apps
-  .\harness\git-ado.ps1 -C C:\Users\skhan\Repos\Apps fetch --prune
+  .\harness\git-ado.ps1 clone https://dev.azure.com/BusPlanner/Managed/_git/Apps $env:USERPROFILE\Repos\Apps
+  .\harness\git-ado.ps1 -C $env:USERPROFILE\Repos\Apps fetch --prune
 
 .NOTES
-  Clone product repos to C:\Users\skhan\Repos\<repo>, outside OneDrive (see knowledge/access.md).
+  Clone product repos to %USERPROFILE%\Repos\<repo>, outside OneDrive (see knowledge/access.md).
   Read-only use: QA never pushes to product repos from this helper.
 #>
 . (Join-Path $PSScriptRoot 'creds.ps1')

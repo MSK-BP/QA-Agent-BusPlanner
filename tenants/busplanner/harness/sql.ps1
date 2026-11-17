@@ -1,7 +1,8 @@
 <#
 .SYNOPSIS
   Read-only SQL Server helper for the Unified dev and staging servers (CA VPN).
-  Login and server come from this script; the password from the user
+  Server comes from this script. The SQL login comes from the user environment
+  variable BP_QA_SQL_LOGIN (each person uses their own), and the password from the user
   environment variable BP_QA_SQL_PASSWORD_DEV or BP_QA_SQL_PASSWORD_STAGING,
   falling back to BP_QA_SQL_PASSWORD (set by the user with
   harness\set-sql-password.ps1). The password is never printed.
@@ -19,7 +20,7 @@ param(
     [ValidateSet('ping', 'databases', 'query')] [string] $Action = 'query',
     [string] $Database = 'master',
     [string] $Query,
-    [string] $Login = 'sharaiz',
+    [string] $Login = [Environment]::GetEnvironmentVariable('BP_QA_SQL_LOGIN', 'User'),
     [int] $MaxRows = 200
 )
 
@@ -51,6 +52,7 @@ if ($q -match '(?i)\b(insert|update|delete|merge|drop|alter|create|truncate|exec
 $b = New-Object System.Data.SqlClient.SqlConnectionStringBuilder
 $b['Data Source'] = "$server,1433"
 $b['Initial Catalog'] = $Database
+if (-not $Login) { Write-Error 'No SQL login. Run harness\set-sql-password.ps1 first: it stores your own login in BP_QA_SQL_LOGIN.'; exit 1 }
 $b['User ID'] = $Login
 $b['Password'] = $pw
 $b['TrustServerCertificate'] = $true
