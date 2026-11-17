@@ -1,0 +1,77 @@
+{
+  "last_run": "2026-11-17T20:28:38Z",
+  "meetings": {
+    "203924420": {
+      "status": "harvested",
+      "date": "2026-11-17",
+      "title": "PGCPS <> BusPlanner: Bi-Weekly Support Check In",
+      "class": "qa-context",
+      "notes": "notes/2026/2026-11-17-pgcps-support-check-in-203924420.md",
+      "reason": null
+    },
+    "203613006": {
+      "status": "harvested",
+      "date": "2026-11-16",
+      "title": "STEO <> BusPlanner - SaaS Implementation Meeting",
+      "class": "qa-context",
+      "notes": "notes/2026/2026-11-16-steo-saas-implementation-203613006.md",
+      "reason": null
+    },
+    "203613040": {
+      "status": "harvested",
+      "date": "2026-11-16",
+      "title": "ETL Workflows",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-16-etl-workflows-203613040.md",
+      "reason": null
+    },
+    "203086298": {
+      "status": "harvested",
+      "date": "2026-11-13",
+      "title": "BusPlanner and CCSD: Eligibility Path Forward",
+      "class": "qa-context",
+      "notes": "notes/2026/2026-11-13-ccsd-eligibility-path-forward-203086298.md",
+      "reason": null
+    },
+    "202993371": {
+      "status": "harvested",
+      "date": "2026-11-13",
+      "title": "QA on-boarding sync",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-13-qa-onboarding-202993371.md",
+      "reason": null
+    },
+    "202961200": {
+      "status": "harvested",
+      "date": "2026-11-13",
+      "title": "Engineering Deep Dive",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-13-engineering-deep-dive-202961200.md",
+      "reason": null
+    },
+    "202654264": {
+      "status": "harvested",
+      "date": "2026-11-12",
+      "title": "Ontario Ministry Reports Training",
+      "class": "qa-context",
+      "notes": "notes/2026/2026-11-12-ontario-ministry-reports-training-202654264.md",
+      "reason": null
+    },
+    "202544284": {
+      "status": "harvested",
+      "date": "2026-11-12",
+      "title": "QA on-boarding sync",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-12-qa-onboarding-202544284.md",
+      "reason": null
+    },
+    "202033054": {
+      "status": "harvested",
+      "date": "2026-11-11",
+      "title": "Engineering Deep Dive",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-11-engineering-deep-dive-202033054.md",
+      "reason": null
+    }
+  }
+}

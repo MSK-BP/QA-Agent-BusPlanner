@@ -25,6 +25,10 @@ Last built 2026-11-10. Code knowledge is from static reading of `BusPlannerUnifi
 | repos/BusPlannerUnified/schema-and-etl-spec.md | Schema v7.22 tables, invariants, ETL spec and QA validation, data checks | from the repo's Word docs, 2026-11-10 |
 | repos/BusPlannerUnified/platform-prd-and-ux.md | UI/UX decisions, design-system and a11y commitments, cross-cutting UI rules | from the repo's Word docs and meeting notes, 2026-11-10 |
 
+## Meeting knowledge base (separate)
+
+`../meetings/` is a second, separate knowledge base: sanitised notes from Fathom recordings, written daily by `/meeting-harvest`. Its entry point is `../meetings/INDEX.md`. It is never merged into this folder automatically. Consult it before any decision (see CLAUDE.md, "Two knowledge bases").
+
 ## What to read for which task
 
 - **Test plan:** domain.md, then the one detailed map for the feature's area, then its requirements file (ta-requirements, chatbot-spec, schema-and-etl-spec or platform-prd-and-ux) for expected behaviour; test-strategy.md for gaps.

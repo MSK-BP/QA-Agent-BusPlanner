@@ -21,6 +21,21 @@ Read `<tenant>/knowledge/INDEX.md` first on any task, then only the files it poi
 - `<tenant>/knowledge/test-strategy.md`: test levels, suites, coverage gaps, flaky list
 - `<tenant>/knowledge/conventions.md`: how tests are written and named there
 - `<tenant>/knowledge/repos/<repo>.md`: one map per product repo
+### Two knowledge bases
+
+| | `<tenant>/knowledge/` (main) | `<tenant>/meetings/` (meeting) |
+|---|---|---|
+| Holds | what is true: from code, Jira, Confluence, the user | what people said, decided, worried about and planned in recorded meetings |
+| Written by | you, as you learn, with sources (rule 8) | `/meeting-harvest` only, daily, with no approval step |
+| Entry point | `knowledge/INDEX.md` | `meetings/INDEX.md` |
+
+The two bases stay separate. The harvest never edits `knowledge/`.
+
+**Before any decision, consult both.** A decision is a test plan, a PR verdict, a release recommendation, the expected behaviour in a bug report, a priority call, or a design or approach choice. For each one:
+1. Ask `meeting-researcher` for the topic. For a small question, read `meetings/INDEX.md` yourself: the "Differs from knowledge base" table, the decision register and the topic list.
+2. Put the meeting input next to the main knowledge in the output: decisions, open positions and concerns, plans, and every conflict between the two bases. Cite the meeting as "said in a meeting (date, link)", never as a verified rule.
+3. Do not choose a side in a conflict without telling the user. State both sides and the dates, then recommend.
+4. When the user confirms a meeting fact, write it into `knowledge/` with the meeting as its source.
 
 Anything marked `TODO` or `UNVERIFIED` there is not knowledge. Confirm it from code, the tenant's documentation or the user before relying on it, then update the file.
 
@@ -40,6 +55,8 @@ Product code lives in separate repos, attached with `--add-dir` or cloned under 
 | A PR assessed from a QA angle | `/pr-qa` |
 | Hands-on exploratory testing | `/explore` |
 | A go/no-go for a release | `/release-signoff` |
+| Recorded meetings pulled into the meeting knowledge base (daily schedule) | `/meeting-harvest` |
+| What was said in meetings about a topic | `meeting-researcher` agent |
 
 Delegate heavy reading and independent checks to the sub-agents in `.claude/agents/`. Keep conclusions in the main thread, not file dumps.
 

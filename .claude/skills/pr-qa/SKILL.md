@@ -10,6 +10,7 @@ QA review of `$ARGUMENTS`.
 2. In parallel:
    - `code-mapper`: what behaviour the diff changes, what else calls the changed code, which changed branches have no test
    - `test-reviewer`: whether the tests in the PR would catch a regression in the changed behaviour
+   - `meeting-researcher`: what meetings decided or worried about for this change, and any conflict with the acceptance criteria
 3. Run the tests that cover the changed area and record the result. If you could not run them, say why.
 4. Compare the change against each acceptance criterion: met, not met, or not verifiable from code.
 5. Reply with:

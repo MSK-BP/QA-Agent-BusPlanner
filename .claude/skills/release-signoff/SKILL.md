@@ -10,7 +10,7 @@ Prepare the QA sign-off for `$ARGUMENTS`.
 2. Per issue: is there a test plan, were its cases run, on which build, with what result. Mark "no evidence" where there is none.
 3. Regression: latest result of each suite named in the release gate in `<tenant>/knowledge/test-strategy.md`, with the build it ran on. Run `/run-suite` for any that are missing or older than the release build, after confirming with the user.
 4. Defects: open bugs against the release by severity, and known issues being shipped.
-5. Risks: untested areas, skipped or quarantined tests, environment differences from production.
+5. Risks: untested areas, skipped or quarantined tests, environment differences from production. Ask `meeting-researcher` for the release's areas: concerns raised in meetings, decisions to hold or ship something, promised dates, and open conflicts with the knowledge base. List each one with its status.
 6. Save `<tenant>/reports/YYYY-MM-DD-signoff-<version>.md` and reply with:
    - recommendation: go, go with conditions, or no-go
    - the blocking items, if any

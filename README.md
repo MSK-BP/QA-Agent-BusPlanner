@@ -69,6 +69,7 @@ The active tenant comes from `QA_TENANT`, else `.qa-tenant` (local, not committe
 | `/pr-qa <PR>` | Risk, coverage of the change, what to test before merge |
 | `/explore <feature>` | Charter-based exploratory session in the running app |
 | `/release-signoff <version>` | Evidence table and a go/no-go recommendation |
+| `/meeting-harvest [since <date>]` | Pulls recorded meetings into the tenant's separate meeting knowledge base (`meetings/`: one sanitised note per meeting, plus a topic index, decision register and conflict list); runs daily from a schedule. Decisions consult it through the `meeting-researcher` agent |
 
 ## Sub-agents
 
