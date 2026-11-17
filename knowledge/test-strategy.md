@@ -79,7 +79,7 @@ Skipped is not passed: a green PR run includes a block of skipped tests. More pa
 
 ## New modules before a framework exists (decided 2026-11-16)
 
-The QA lead decided: no new automation framework before 18 December 2026. New modules, starting with Ride Support, are tested agentically with this hub. Design: `reports/2026-11-16-agentic-test-approach.md` (design only; the new skills and agents are not built yet).
+Decided 2026-11-17 (testers and engineering manager to confirm): two tracks. Track 1, now: current-sprint work, starting with Ride Support, is tested agentically with this hub. Track 2, later: an agent-maintained Playwright/Appium/xUnit framework for stable N-1/N-2 work, started when Track 1 is stable and fed by its cases. No hard Ride Support deadline yet. Plan: `reports/2026-11-16-agentic-test-approach.md` (the new skills and agents are not built yet).
 
 - Cases: markdown files in this tenant at `tests/<module>/<flow>/<case-id>.md`; a pull request approves them.
 - Channels: browser (Playwright), API (guarded helper, to build), SQL (`harness/sql.ps1`), device (Appium MCP on an Android emulator or tablet, for Turns). All channels are agentic; no manual channel (decided 2026-11-17). Testing runs on dev; no separate test client.

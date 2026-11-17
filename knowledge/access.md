@@ -1,6 +1,6 @@
 # Access register
 
-> Checked 2026-11-16 with the agent's own tokens and connectors. Updated 2026-11-17: code access to all three Azure DevOps projects was granted to the QA lead and two team members. Read-only checks only: no invite accepted, no account created, no access requested. Secret values were not read or printed.
+> Checked 2026-11-16 with the agent's own tokens and connectors. Updated 2026-11-17: code access to all three Azure DevOps projects was granted to the user (QA tester) and two team members. There is no QA lead: the QA team is two testers plus the engineering manager. Read-only checks only: no invite accepted, no account created, no access requested. Secret values were not read or printed.
 
 ## Verdict
 
