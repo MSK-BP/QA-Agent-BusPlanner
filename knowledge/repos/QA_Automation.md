@@ -25,5 +25,5 @@ This is the only existing QA automation found at BusPlanner. It is a small Playw
 
 ## Relevance to the test approach
 
-- Confirms the team already accepts Playwright and Azure DevOps test publishing. After 18 December, the Ride Support cases can convert into a Playwright suite in the same style (`reports/2026-11-16-agentic-test-approach.md`, section 11).
+- Confirms the team already accepts Playwright and Azure DevOps test publishing. In Track 2 (when Track 1 is stable), approved Ride Support cases can convert into a Playwright suite in the same style (`reports/2026-11-16-agentic-test-approach.md`, section 12).
 - Data creation (work orders) has no clean-up step and no `QA-AUTO-` prefix.
