@@ -1,0 +1,208 @@
+<title>Ship Dark, Release by Toggle</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one column. Thesis, then the code flow (one build promoted), then the toggle matrix (what "released" means), then lanes, comparison, guardrails. */
+:root {
+  --bg: #f6f7f9; --surface: #ffffff; --fg: #1a2230; --muted: #5c6777; --line: #dce1e9; --chip: #eef1f5;
+  --main: #1f3a68; --go: #12806f; --stop: #c4473f; --rc: #d47a1c; --off: #9aa3af;
+  --on-bg: #dff3ee; --off-bg: #eef0f3;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #10141b; --surface: #171d26; --fg: #e3e7ee; --muted: #97a2b2; --line: #29323f; --chip: #202834;
+  --main: #80a7ec; --go: #3fc4ae; --stop: #ef7770; --rc: #f0a457; --off: #6f7988;
+  --on-bg: #163a35; --off-bg: #222a35; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #10141b; --surface: #171d26; --fg: #e3e7ee; --muted: #97a2b2; --line: #29323f; --chip: #202834;
+  --main: #80a7ec; --go: #3fc4ae; --stop: #ef7770; --rc: #f0a457; --off: #6f7988;
+  --on-bg: #163a35; --off-bg: #222a35; color-scheme: dark; }
+body { background: var(--bg); color: var(--fg); font-family: var(--sans); font-size: 15px; line-height: 1.55; }
+.wrap { max-width: 1140px; margin: 0 auto; padding-block: 32px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 36px; }
+h1 { font-size: 32px; line-height: 1.15; margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0 0 14px; font-weight: 600; }
+p { margin: 0; max-width: 70ch; }
+.lede { margin-top: 10px; font-size: 17px; }
+code, .mono { font-family: var(--mono); font-size: 0.88em; }
+.ideas { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.idea { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; display: grid; gap: 4px; min-width: 0; }
+.idea b { font-size: 16px; }
+.idea span { color: var(--muted); font-size: 14px; }
+.panel { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow-x: auto; }
+.panel svg { display: block; min-width: 960px; width: 100%; height: auto; }
+svg text { font-family: var(--sans); fill: var(--fg); }
+svg .lbl { font-size: 14px; font-weight: 600; }
+svg .sub { font-size: 12px; fill: var(--muted); }
+svg .note { font-size: 11.5px; fill: var(--muted); }
+svg .sha { font-family: var(--mono); font-size: 12.5px; font-weight: 500; fill: var(--rc); }
+.edge { fill: none; stroke-width: 3; stroke-linecap: round; }
+.thin { fill: none; stroke-width: 2; stroke-linecap: round; }
+.dash { stroke-dasharray: 6 6; }
+.dot { stroke: var(--surface); stroke-width: 2.5; }
+.box { fill: var(--chip); stroke: var(--line); stroke-width: 1; }
+.box-rc { fill: var(--chip); stroke: var(--rc); stroke-width: 1.5; }
+.tablewrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; vertical-align: top; padding: 9px 12px 9px 0; border-bottom: 1px solid var(--line); }
+th { font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+.pill { display: inline-block; font-family: var(--mono); font-size: 11.5px; font-weight: 500; padding: 1px 9px; border-radius: 99px; }
+.on { background: var(--on-bg); color: var(--go); }
+.off { background: var(--off-bg); color: var(--muted); }
+.na { color: var(--muted); font-size: 12.5px; }
+.lanes { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px; }
+.lane { background: var(--surface); border: 1px solid var(--line); border-top: 3px solid var(--c); border-radius: 8px; padding: 14px 16px; display: grid; gap: 8px; align-content: start; min-width: 0; }
+.lane h3 { margin: 0; font-size: 16px; }
+.lane ul, ul.g { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 14px; }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 28px; }
+.foot { font-size: 12.5px; color: var(--muted); }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Ship Dark, Release by Toggle</h1>
+    <p class="lede">Separate <b>merging code</b> from <b>releasing features</b>. Code merges to <code>main</code> after review, switched off. One build is promoted unchanged from dev to stage to prod. An item is released when QA turns its toggle on, client by client.</p>
+  </header>
+
+  <section class="ideas">
+    <div class="idea"><b>Merge is not release</b><span>Untested work ships dark. Nothing has to be reverted or frozen to cut a release.</span></div>
+    <div class="idea"><b>One build, promoted</b><span>Stage and prod run the exact image QA tested. Our images and FE bundle already carry no environment config.</span></div>
+    <div class="idea"><b>Release per client</b><span>We are multi-tenant with a per-client flag table already. Turn a feature on for one pilot district first.</span></div>
+  </section>
+
+  <section>
+    <h2>Code flow</h2>
+    <div class="panel">
+      <svg viewBox="0 0 1120 320" role="img" aria-labelledby="t1">
+        <title id="t1">Short-lived branches merge to main after review. Risky changes go through a pre-merge QA lane. One commit becomes the release candidate and the same image goes to stage and prod.</title>
+        <text x="16" y="76" class="lbl" style="fill:var(--go)">short-lived branches</text>
+        <text x="16" y="94" class="sub">merge after code review, toggle off</text>
+        <text x="16" y="146" class="lbl" style="fill:var(--main)">main</text>
+        <text x="16" y="164" class="sub">every merge → CA dev</text>
+        <text x="16" y="226" class="lbl" style="fill:var(--stop)">pre-merge QA lane</text>
+        <text x="16" y="244" class="sub">changes that can't be toggled</text>
+
+        <path class="edge" style="stroke:var(--main)" d="M210,150 L800,150"/>
+        <path class="edge" style="stroke:var(--go)" d="M260,150 C276,150 276,80 292,80 L318,80 C334,80 334,150 350,150"/>
+        <path class="edge" style="stroke:var(--go)" d="M392,150 C408,150 408,80 424,80 L450,80 C466,80 466,150 482,150"/>
+        <path class="edge" style="stroke:var(--go)" d="M524,150 C540,150 540,80 556,80 L582,80 C598,80 598,150 614,150"/>
+        <path class="edge" style="stroke:var(--stop)" d="M300,150 C318,150 318,230 336,230 L640,230 C658,230 658,150 676,150"/>
+
+        <text x="270" y="64" class="note">BP-1412</text>
+        <text x="402" y="64" class="note">BP-1420</text>
+        <text x="534" y="64" class="note">BP-1433</text>
+        <text x="360" y="258" class="note">BP-1450 drop a column · tested in a QA env first, then merged</text>
+
+        <circle class="dot" style="fill:var(--main)" cx="228" cy="150" r="7"/>
+        <circle class="dot" style="fill:var(--go)" cx="305" cy="80" r="6"/>
+        <circle class="dot" style="fill:var(--main)" cx="350" cy="150" r="8"/>
+        <circle class="dot" style="fill:var(--go)" cx="437" cy="80" r="6"/>
+        <circle class="dot" style="fill:var(--main)" cx="482" cy="150" r="8"/>
+        <circle class="dot" style="fill:var(--go)" cx="569" cy="80" r="6"/>
+        <circle class="dot" style="fill:var(--main)" cx="614" cy="150" r="8"/>
+        <circle class="dot" style="fill:var(--stop)" cx="420" cy="230" r="6"/>
+        <circle class="dot" style="fill:var(--stop)" cx="540" cy="230" r="6"/>
+        <circle class="dot" style="fill:var(--main)" cx="676" cy="150" r="8"/>
+        <circle cx="752" cy="150" r="12" style="fill:var(--surface);stroke:var(--rc);stroke-width:3"/>
+        <circle cx="752" cy="150" r="5" style="fill:var(--rc)"/>
+        <text x="726" y="126" class="sha">a3f9c1</text>
+        <text x="716" y="182" class="note">release candidate</text>
+
+        <!-- environments -->
+        <path class="thin dash" style="stroke:var(--main)" d="M800,150 C840,150 840,72 880,72"/>
+        <path class="thin" style="stroke:var(--rc)" d="M766,150 L880,150"/>
+        <path class="thin" style="stroke:var(--rc)" d="M990,176 L990,206"/>
+        <rect class="box" x="880" y="46" width="224" height="54" rx="7"/>
+        <text x="894" y="69" class="lbl">CA dev</text>
+        <text x="894" y="88" class="sub">every merge · toggles on for QA</text>
+        <rect class="box-rc" x="880" y="124" width="224" height="54" rx="7"/>
+        <text x="894" y="147" class="lbl">CA + US stage</text>
+        <text x="894" y="166" class="sub">image a3f9c1 · regression</text>
+        <rect class="box-rc" x="880" y="206" width="224" height="54" rx="7"/>
+        <text x="894" y="229" class="lbl">CA + US prod</text>
+        <text x="894" y="248" class="sub">tag v14.2 = image a3f9c1</text>
+        <text x="880" y="290" class="note">same image all the way, no rebuild</text>
+        <text x="840" y="112" class="note">auto</text>
+      </svg>
+    </div>
+  </section>
+
+  <section>
+    <h2>What "released" means: the toggle matrix for v14.2</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Item</th><th>State</th><th>CA dev</th><th>Stage</th><th>Prod · pilot client</th><th>Prod · all clients</th></tr></thead>
+        <tbody>
+          <tr><td><b>BP-1412</b> report filter</td><td>QA passed</td><td><span class="pill on">on</span></td><td><span class="pill on">on</span></td><td><span class="pill on">on</span></td><td><span class="pill on">on</span></td></tr>
+          <tr><td><b>BP-1433</b> ETL integration</td><td>Passed with Old World dev</td><td><span class="pill on">on</span></td><td><span class="pill on">on</span></td><td><span class="pill on">on</span></td><td><span class="pill off">off</span></td></tr>
+          <tr><td><b>BP-1420</b> dispatch change</td><td>Still in QA</td><td><span class="pill on">on</span></td><td><span class="pill off">off</span></td><td><span class="pill off">off</span></td><td><span class="pill off">off</span></td></tr>
+          <tr><td><b>BP-1450</b> drop a column</td><td>Pre-merge lane, passed</td><td colspan="4" class="na">No toggle. It merged only after QA, so it ships with the build.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="foot" style="margin-top:10px">BP-1420 ships inside image a3f9c1 but stays off. It goes live in a later toggle change, with no new build and no revert.</p>
+  </section>
+
+  <section class="lanes">
+    <div class="lane" style="--c:var(--go)">
+      <h3>Default lane: merge dark</h3>
+      <ul>
+        <li>New screens, reports, endpoints, behaviour changes</li>
+        <li>Toggle named after the ticket, off by default</li>
+        <li>QA tests on CA dev with the toggle on for a QA test client</li>
+        <li>QA approval = toggle on in stage, then prod</li>
+      </ul>
+    </div>
+    <div class="lane" style="--c:var(--stop)">
+      <h3>Exception lane: QA before merge</h3>
+      <ul>
+        <li>Schema removals and renames</li>
+        <li>Auth, permissions, tenant scoping</li>
+        <li>Pipelines, infra, shared libraries</li>
+        <li>Tested on a QA environment, merged only when qa-approved</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="two">
+    <div>
+      <h2>Compared with release branches + pre-merge QA</h2>
+      <div class="tablewrap">
+        <table>
+          <thead><tr><th></th><th>Release branches</th><th>Ship dark</th></tr></thead>
+          <tbody>
+            <tr><td>QA environments</td><td>One per tester, DB resets</td><td>Only for the exception lane</td></tr>
+            <tr><td>Waiting work</td><td>Parked PRs, rebase and re-test</td><td>Already merged, off</td></tr>
+            <tr><td>Late pull</td><td>Revert PR on the release branch</td><td>Toggle off, no deploy</td></tr>
+            <tr><td>Rollout</td><td>All clients at once</td><td>Pilot client first</td></tr>
+            <tr><td>Hotfix</td><td>Branch from release</td><td>Branch from the prod tag</td></tr>
+            <tr><td>New cost</td><td>QA env fleet</td><td>Toggle discipline</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div>
+      <h2>Guardrails</h2>
+      <ul class="g">
+        <li><b>Toggle hygiene.</b> Every toggle carries its ticket key and an expiry. Removing it is part of done. A cap on live toggles.</li>
+        <li><b>Off means inert.</b> Review checks the off path. CI runs unit tests with all toggles off and all on.</li>
+        <li><b>Schema adds first.</b> Additive migrations ship ahead of the feature. Removals go through the exception lane a release later.</li>
+        <li><b>Migrations in the pipeline.</b> Timestamp ids instead of <code>NN_</code>, so parallel branches can't collide. MigrationTool runs in every deploy.</li>
+        <li><b>Toggles scoped three ways.</b> Extend <code>BPFeatureFlag</code> (per client today) to global and per environment.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <h2>Getting there</h2>
+    <ul class="g">
+      <li><b>At the GitHub move:</b> <code>main</code> only, rulesets, build once and promote by SHA, hotfix from tag, aligned region defaults.</li>
+      <li><b>Next sprint:</b> global and per-environment toggles, the two lanes, migrations in the pipeline.</li>
+      <li><b>After:</b> per-client rollout as the normal release step, integration tests in CI.</li>
+    </ul>
+  </section>
+
+  <p class="foot">Grounded in a read of BusPlannerUnified pipelines and Azure DevOps data on 2026-11-12: about 20 merges a week into dev, 70 unreleased since Oct 22, 3 prod deploys since mid-September, every environment rebuilds today. Item keys are illustrative.</p>
+</div>

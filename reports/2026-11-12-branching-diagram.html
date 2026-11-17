@@ -1,0 +1,175 @@
+<title>New World Branching Model</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one column; a git graph in the subject's own notation is the hero, then lifecycle gates, then what it fixes and what the pipelines add. */
+:root {
+  --bg: #f7f8fa; --surface: #ffffff; --fg: #1b2330; --muted: #5d6878; --line: #dde2ea;
+  --main: #1f3a68; --feat: #0f8a7e; --parked: #8e98a6; --flag: #7a4fc4; --rel: #d9771f; --fix: #c8423b;
+  --chip: #eef1f6;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #11151c; --surface: #181e27; --fg: #e4e8ef; --muted: #98a3b3; --line: #2a3340;
+  --main: #7ea6ec; --feat: #3cc7b8; --parked: #7d8796; --flag: #b393f0; --rel: #f0a052; --fix: #f0726b;
+  --chip: #212935; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #11151c; --surface: #181e27; --fg: #e4e8ef; --muted: #98a3b3; --line: #2a3340;
+  --main: #7ea6ec; --feat: #3cc7b8; --parked: #7d8796; --flag: #b393f0; --rel: #f0a052; --fix: #f0726b;
+  --chip: #212935; color-scheme: dark; }
+body { background: var(--bg); color: var(--fg); font-family: var(--sans); font-size: 15px; line-height: 1.55; }
+.wrap { max-width: 1140px; margin: 0 auto; padding-block: 32px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: grid; gap: 36px; }
+h1 { font-size: 30px; line-height: 1.15; margin: 0; letter-spacing: -0.01em; text-wrap: balance; }
+h2 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 0 0 14px; font-weight: 600; }
+p { margin: 0; max-width: 68ch; }
+.lede { color: var(--muted); margin-top: 8px; }
+code, .mono { font-family: var(--mono); font-size: 0.88em; }
+.graph { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; overflow-x: auto; }
+.graph svg { display: block; min-width: 960px; width: 100%; height: auto; }
+svg text { font-family: var(--sans); fill: var(--fg); }
+svg .lbl { font-size: 14px; font-weight: 600; }
+svg .env { font-size: 12px; fill: var(--muted); }
+svg .note { font-size: 11.5px; fill: var(--muted); }
+svg .tag { font-family: var(--mono); font-size: 12px; font-weight: 500; }
+.k-main { stroke: var(--main); } .k-feat { stroke: var(--feat); } .k-parked { stroke: var(--parked); }
+.k-flag { stroke: var(--flag); } .k-rel { stroke: var(--rel); } .k-fix { stroke: var(--fix); }
+.f-main { fill: var(--main); } .f-feat { fill: var(--feat); } .f-parked { fill: var(--parked); }
+.f-flag { fill: var(--flag); } .f-rel { fill: var(--rel); } .f-fix { fill: var(--fix); }
+.edge { fill: none; stroke-width: 3; stroke-linecap: round; }
+.dash { stroke-dasharray: 6 6; }
+.dot { stroke: var(--surface); stroke-width: 2.5; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; counter-reset: s; }
+.steps li { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; display: grid; gap: 6px; align-content: start; counter-increment: s; min-width: 0; }
+.steps li::before { content: counter(s); font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.steps b { font-weight: 600; }
+.gate { justify-self: start; font-family: var(--mono); font-size: 11.5px; padding: 2px 8px; border-radius: 99px; background: var(--chip); color: var(--fg); border-left: 3px solid var(--c, var(--muted)); }
+.two { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 28px; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; vertical-align: top; padding: 9px 10px 9px 0; border-bottom: 1px solid var(--line); }
+th { font-size: 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+ul.adds { margin: 0; padding-left: 18px; display: grid; gap: 10px; font-size: 14px; }
+ul.adds b { font-weight: 600; }
+.foot { font-size: 12.5px; color: var(--muted); }
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>New World Branching Model</h1>
+    <p class="lede">Trunk is <code>main</code> and holds only QA-passed work. Each item is tested in a QA environment before it merges. A release branch is cut from <code>main</code> for stage, and a <code>v*</code> tag ships to prod. Fixes land on the release branch and merge back.</p>
+  </header>
+
+  <section class="graph" aria-label="Branch graph">
+    <svg viewBox="0 0 1120 470" role="img" aria-labelledby="gt">
+      <title id="gt">Branch graph: feature branches merge to main after QA; release branch cut from main goes to stage, tags go to prod; fixes merge back to main.</title>
+      <!-- lane labels -->
+      <text x="16" y="46" class="lbl" style="fill:var(--fix)">fix/* · hotfix/*</text>
+      <text x="16" y="64" class="env">from the release branch</text>
+      <text x="16" y="116" class="lbl" style="fill:var(--rel)">release/14.2</text>
+      <text x="16" y="134" class="env">CA + US stage · tag → prod</text>
+      <text x="16" y="216" class="lbl" style="fill:var(--main)">main</text>
+      <text x="16" y="234" class="env">auto-deploys CA dev</text>
+      <text x="16" y="296" class="lbl" style="fill:var(--feat)">product/BP-1412</text>
+      <text x="16" y="314" class="env">tester's QA env</text>
+      <text x="16" y="356" class="lbl" style="fill:var(--parked)">product/BP-1420</text>
+      <text x="16" y="374" class="env">QA-passed, next release</text>
+      <text x="16" y="416" class="lbl" style="fill:var(--flag)">product/BP-1433</text>
+      <text x="16" y="434" class="env">integration item, flag off</text>
+
+      <!-- main -->
+      <path class="edge k-main" d="M210,220 L1100,220"/>
+      <!-- feature A -->
+      <path class="edge k-feat" d="M240,220 C262,220 262,300 284,300 L396,300 C418,300 418,220 440,220"/>
+      <!-- feature B parked -->
+      <path class="edge k-parked" d="M270,220 C292,220 292,360 314,360 L420,360"/>
+      <path class="edge k-parked dash" d="M420,360 L868,360"/>
+      <path class="edge k-parked" d="M868,360 C890,360 890,220 912,220"/>
+      <!-- integration flagged -->
+      <path class="edge k-flag" d="M300,220 C322,220 322,420 344,420 L486,420 C508,420 508,220 530,220"/>
+      <!-- release -->
+      <path class="edge k-rel" d="M600,220 C622,220 622,120 644,120 L1100,120"/>
+      <!-- regression fix -->
+      <path class="edge k-fix" d="M680,120 C696,120 696,50 712,50 L730,50 C746,50 746,120 762,120"/>
+      <!-- merge back after fix -->
+      <path class="edge k-fix dash" d="M772,120 C794,120 794,220 816,220"/>
+      <!-- hotfix -->
+      <path class="edge k-fix" d="M862,120 C878,120 878,50 894,50 L922,50 C938,50 938,120 954,120"/>
+      <path class="edge k-fix dash" d="M992,120 C1014,120 1014,220 1036,220"/>
+
+      <!-- commits -->
+      <circle class="dot f-main" cx="226" cy="220" r="7"/>
+      <circle class="dot f-feat" cx="320" cy="300" r="6"/><circle class="dot f-feat" cx="366" cy="300" r="6"/>
+      <circle class="dot f-main" cx="440" cy="220" r="8"/>
+      <circle class="dot f-parked" cx="350" cy="360" r="6"/><circle class="dot f-parked" cx="396" cy="360" r="6"/>
+      <circle class="dot f-flag" cx="390" cy="420" r="6"/><circle class="dot f-flag" cx="446" cy="420" r="6"/>
+      <circle class="dot f-main" cx="530" cy="220" r="8"/>
+      <circle class="dot f-main" cx="600" cy="220" r="8"/>
+      <circle class="dot f-rel" cx="680" cy="120" r="6"/>
+      <circle class="dot f-fix" cx="721" cy="50" r="6"/>
+      <circle class="dot f-rel" cx="762" cy="120" r="7"/>
+      <circle class="dot f-main" cx="816" cy="220" r="8"/>
+      <rect class="dot f-rel" x="830" y="110" width="20" height="20" transform="rotate(45 840 120)"/>
+      <circle class="dot f-fix" cx="908" cy="50" r="6"/>
+      <circle class="dot f-rel" cx="954" cy="120" r="7"/>
+      <rect class="dot f-rel" x="972" y="110" width="20" height="20" transform="rotate(45 982 120)"/>
+      <circle class="dot f-main" cx="912" cy="220" r="8"/>
+      <circle class="dot f-main" cx="1036" cy="220" r="8"/>
+
+      <!-- annotations -->
+      <text x="296" y="326" class="note">qa-approved · fixVersion 14.2 · squash merge</text>
+      <text x="432" y="352" class="note">parked as an approved PR (fixVersion 14.3), rebased, then merged</text>
+      <text x="360" y="446" class="note">merged dark · tested on CA dev + Old World dev</text>
+      <text x="560" y="250" class="note">cut at regression start</text>
+      <text x="660" y="148" class="note">regression on stage</text>
+      <text x="700" y="30" class="note">regression fix</text>
+      <text x="876" y="30" class="note">prod hotfix</text>
+      <text x="784" y="96" class="tag" style="fill:var(--rel)">v14.2.0 → prod</text>
+      <text x="962" y="96" class="tag" style="fill:var(--rel)">v14.2.1</text>
+      <text x="742" y="186" class="note">auto merge-back PR</text>
+    </svg>
+  </section>
+
+  <section>
+    <h2>Lifecycle of one item</h2>
+    <ol class="steps">
+      <li><b>Branch from main</b><span class="mono">product/BP-1412-desc</span></li>
+      <li><b>PR to main</b>Builds and tests on every push.<span class="gate" style="--c:var(--main)">build · test</span></li>
+      <li><b>Code review</b><span class="gate" style="--c:var(--main)">1 reviewer</span></li>
+      <li><b>Tester deploys the branch</b>To their QA env, DB reset from backup.<span class="gate" style="--c:var(--feat)">qa-1 … qa-n, us-qa</span></li>
+      <li><b>QA passes</b><span class="gate" style="--c:var(--feat)">qa-approved</span></li>
+      <li><b>Release check</b>Not next release? PR stays parked, approved.<span class="gate" style="--c:var(--parked)">fixVersion = next</span></li>
+      <li><b>Squash merge</b>CA dev deploys for integration.<span class="gate" style="--c:var(--main)">CA dev</span></li>
+      <li><b>Cut release/x.y</b>Regression on stage.<span class="gate" style="--c:var(--rel)">CA + US stage</span></li>
+      <li><b>Tag vx.y.0</b>Prod deploy with approval.<span class="gate" style="--c:var(--rel)">CA + US prod</span></li>
+    </ol>
+  </section>
+
+  <section class="two">
+    <div>
+      <h2>What it fixes</h2>
+      <table>
+        <thead><tr><th>Today</th><th>In this model</th></tr></thead>
+        <tbody>
+          <tr><td>25 merged, 15 tested: revert-storm or seal dev</td><td>Only QA-passed work reaches <code>main</code>. The item is the unit.</td></tr>
+          <tr><td>Untested dev code promotes to stage</td><td>No branch-to-branch promotion. Stage deploys only <code>release/*</code>.</td></tr>
+          <tr><td>Hotfix on a dev branch carrying 30 items, then cherry-pick</td><td>Fix branches from the release, merges in, auto-merges back.</td></tr>
+          <tr><td>Skip lane leaves untested code on dev</td><td>Integration items merge behind a flag that is off.</td></tr>
+          <tr><td>Late pull of an item</td><td>One revert PR of its squash commit on the release branch.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h2>What the pipelines need for this to work</h2>
+      <ul class="adds">
+        <li><b>Build once, promote the image.</b> Today every environment rebuilds from its branch. Stage and prod should deploy the image built from the release SHA, so prod runs what regression tested.</li>
+        <li><b>Migrations.</b> Parked PRs and parallel branches will collide on <code>NN_</code> numbers and the ordered <code>MigrationCatalog</code>. Use timestamp ids, run MigrationTool in each deploy (QA env resets too), and keep schema changes additive so a reverted item doesn't strand a column.</li>
+        <li><b>QA env data.</b> Staging holds real customer data and dev config points at real BP Info. QA env backups need scrubbed data and outbound integrations off.</li>
+        <li><b>Close the gaps.</b> FE and BE region defaults differ (US vs Canada). Service pipelines deploy any branch. PR checks skip MigrationTool, ETL and the GPS services.</li>
+      </ul>
+    </div>
+  </section>
+
+  <p class="foot">Model from the team proposal (Nov 12). Pipeline findings are from a read of BusPlannerUnified <code>pipelines/</code> and Azure DevOps run data on 2026-11-12. Nothing was executed.</p>
+</div>
