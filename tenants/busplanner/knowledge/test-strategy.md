@@ -81,8 +81,8 @@ Skipped is not passed: a green PR run includes a block of skipped tests. More pa
 
 Decided 2026-11-17 (testers and engineering manager to confirm): two tracks. Track 1, now: current-sprint work, starting with Ride Support, is tested agentically with this hub. Track 2, later: an agent-maintained Playwright/Appium/xUnit framework for stable N-1/N-2 work, started when Track 1 is stable and fed by its cases. No hard Ride Support deadline yet. Plan: `reports/2026-11-16-agentic-test-approach.md` (the new skills and agents are not built yet).
 
-- Cases: markdown files in this tenant at `tests/<module>/<flow>/<case-id>.md`; a pull request approves them.
+- Cases: markdown files in this tenant at `tests/<module>/<flow>/<case-id>.md` (rules in `tests/README.md`). Built 2026-11-18: `/write-cases`, `/review-cases` (a person approves), `/run-cases` (`case-runner` observes, `result-verifier` judges), `/test-module`, and `harness\cases.ps1` (validate, matrix, CSV export). First suite: `tests/suites/smoke.md`.
 - Channels: browser (Playwright), API (guarded helper, to build), SQL (`harness/sql.ps1`), device (Appium MCP on an Android emulator or tablet, for Turns). All channels are agentic; no manual channel (decided 2026-11-17). Testing runs on dev; no separate test client.
 - Every verdict is checked by an independent verifier agent against the evidence.
 - Developers keep writing their own unit and component tests in BusPlannerUnified.
-- After Dec 18, stable cases are converted into code for the BP Unified framework.
+- Track 2: when Track 1 is stable, stable cases are converted into code for the BP Unified framework.

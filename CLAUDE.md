@@ -48,6 +48,10 @@ Product code lives in separate repos, attached with `--add-dir` or cloned under 
 | Learn a repo | `/onboard-repo` |
 | Learn the product from its wiki and tracker | `/learn-domain` |
 | Test plan or test cases for a ticket/feature | `/test-plan` |
+| Runnable markdown test case files written | `/write-cases` |
+| Test cases reviewed, or approved by a person | `/review-cases` |
+| Markdown test cases or a suite run, verified and reported | `/run-cases` |
+| The whole loop for a module or ticket, gate by gate | `/test-module` |
 | Automated tests written | `/write-tests` |
 | A suite run and summarised | `/run-suite` |
 | Failures or flakiness explained | `/triage` |

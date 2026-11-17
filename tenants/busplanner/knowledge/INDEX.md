@@ -29,6 +29,10 @@ Last built 2026-11-10. Code knowledge is from static reading of `BusPlannerUnifi
 
 `../meetings/` is a second, separate knowledge base: sanitised notes from Fathom recordings, written daily by `/meeting-harvest`. Its entry point is `../meetings/INDEX.md`. It is never merged into this folder automatically. Consult it before any decision (see CLAUDE.md, "Two knowledge bases").
 
+## Test cases
+
+`../tests/` holds the markdown test cases, suites, runs and the coverage matrix (`../tests/MATRIX.md`). BusPlanner rules for cases (ID prefixes, channels, roles, data prefix) are in `../tests/README.md`. Commands: `/write-cases`, `/review-cases`, `/run-cases`, `/test-module`; `harness\cases.ps1` in the hub lists, validates and builds the matrix.
+
 ## What to read for which task
 
 - **Test plan:** domain.md, then the one detailed map for the feature's area, then its requirements file (ta-requirements, chatbot-spec, schema-and-etl-spec or platform-prd-and-ux) for expected behaviour; test-strategy.md for gaps.

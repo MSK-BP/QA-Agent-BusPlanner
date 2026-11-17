@@ -69,6 +69,10 @@ The active tenant comes from `QA_TENANT`, else `.qa-tenant` (local, not committe
 | `/pr-qa <PR>` | Risk, coverage of the change, what to test before merge |
 | `/explore <feature>` | Charter-based exploratory session in the running app |
 | `/release-signoff <version>` | Evidence table and a go/no-go recommendation |
+| `/write-cases <plan, KEY or feature>` | Writes markdown test case files in the tenant's `tests/`, reviewed by `test-reviewer`, left for a person to approve |
+| `/review-cases [approve] <selector>` | Independent review of cases, or records a person's approval |
+| `/run-cases <suite or selector> [env] [rehearsal]` | Runs approved cases with `case-runner`, has `result-verifier` judge each from evidence, triages failures, writes the run report and coverage matrix |
+| `/test-module <module or KEY>` | The whole loop, stopping at each human gate (approval, bug filing) |
 | `/meeting-harvest [since <date>]` | Pulls recorded meetings into the tenant's separate meeting knowledge base (`meetings/`: one sanitised note per meeting, plus a topic index, decision register and conflict list); runs daily from a schedule. Decisions consult it through the `meeting-researcher` agent |
 
 ## Sub-agents
@@ -81,6 +85,8 @@ The active tenant comes from `QA_TENANT`, else `.qa-tenant` (local, not committe
 | `exploratory-tester` | Drives the real app by browser or API | no product code |
 | `failure-triager` | Finds why a test failed | no product code |
 | `test-reviewer` | Checks that tests would actually catch the bug | no |
+| `case-runner` | Runs one markdown case through browser, API, SQL or device; records observations, never verdicts | result and evidence files only |
+| `result-verifier` | Judges each expected line from the evidence alone: Pass, Fail, Blocked, Inconclusive | no |
 
 ## Examples
 

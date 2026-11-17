@@ -1,0 +1,48 @@
+# Test cases
+
+Markdown test cases that the QA agent writes, reviews, runs and reports on. People approve them. One file per case. Git is the history and a pull request (or an approval through `/review-cases`) is the review.
+
+## Layout
+
+```
+tests/
+├─ <module>/<flow>/<ID>.md   one case (template: templates/cases/CASE.md in the hub)
+├─ suites/<name>.md          a named suite: filters and/or case IDs (templates/cases/SUITE.md)
+├─ runs/<run-id>/RUN.md      one run: case list, verdict, failures, bugs drafted
+├─ runs/<run-id>/<ID>.md     one result per case (templates/cases/RESULT.md)
+├─ MATRIX.md                 last verdict of every case (generated)
+└─ cases.csv                 every case as a row, for a test-management import (generated)
+```
+
+Screenshots and network logs never go in git. They go to the tenant's run folder, `runs/<run-id>/`.
+
+## Life of a case
+
+| Status | Set by | Meaning |
+|---|---|---|
+| `draft` | `/write-cases` | Written by `test-designer` |
+| `reviewed` | `/write-cases`, `/review-cases` | `test-reviewer` checked it and its fixes are in |
+| `approved` | A person, through `/review-cases approve` or by editing the file | Counts for runs and sign-off. `approved-by` names the person |
+| `retired` | A person | Kept for history, never run |
+
+A person changes an approved case only through a new review. Editing the steps or expected lines sets it back to `reviewed`.
+
+## Rules for a good case
+
+- Every expected line is checkable and names its channel: `- E2 (step 3, sql): ...`.
+- One expected result per line. "It works" is not an expected result.
+- Every expected result traces to a requirement, a ticket, or a rule in `knowledge/domain.md`. Mark anything else `ASSUMPTION`.
+- Data the case creates starts with the tester's prefix (`QA-AUTO-<initials>-`), and Clean-up removes it.
+- The lowest channel that can prove a result wins: SQL or API before UI when the UI adds nothing.
+
+## Commands
+
+| Do | Command |
+|---|---|
+| Write cases from a plan, a ticket or a feature | `/write-cases <plan file, ticket key or feature>` |
+| Review cases, or approve them | `/review-cases <selector>`, `/review-cases approve <selector>` |
+| Run a suite or a selection | `/run-cases <suite or selector> [env]` |
+| The whole loop for a module or ticket | `/test-module <module or ticket>` |
+| List, validate, matrix (no agent) | `harness\cases.ps1 -Action list|validate|matrix` |
+
+Selectors: a suite name, case IDs, or filters such as `module=checkout flow=F2 priority=P1 tag=smoke ticket=PROJ-12`.
