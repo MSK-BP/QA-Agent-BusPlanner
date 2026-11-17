@@ -7,7 +7,7 @@
 > - Front end: `npm ci` ok; `npm run lint` 0 errors, 58 warnings; `npx jest --ci` 158/158 suites, 2,161/2,161 tests, about 2 min; `npm run build` ok.
 > - Not yet run: integration tests (need a SQL Server the user names), chatbot evals (live, billable).
 >
-> Run builds from a git clone outside OneDrive (for example `C:\src\BusPlannerUnified`), not from `repos/` here: `node_modules`, `bin` and `obj` add several hundred MB that OneDrive would sync. No written test strategy or definition of done exists in Confluence; what follows describes what is, plus the gaps. Old World suites: NOT FOUND.
+> Run builds from a git clone outside OneDrive (`C:\Users\skhan\Repos\<repo>`; that folder holds everything that must stay out of OneDrive), not from `repos/` here: `node_modules`, `bin` and `obj` add several hundred MB that OneDrive would sync. No written test strategy or definition of done exists in Confluence; what follows describes what is, plus the gaps. Old World suites: NOT FOUND.
 
 ## Suites (BusPlanner Unified)
 

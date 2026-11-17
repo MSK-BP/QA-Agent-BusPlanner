@@ -1,6 +1,6 @@
 # Repo map: Apps (Turns, Chipmunk, Delays, Subs)
 
-> Read from code 2026-11-17. Clone: `C:\src\Apps` (Azure DevOps `Managed/_git/Apps`, branch `dev`). Static reading only: nothing was built or run. This replaces the second-hand map of 2026-11-16, which came from the PRD. Paths are relative to the repo root.
+> Read from code 2026-11-17. Clone: `C:\Users\skhan\Repos\Apps` (Azure DevOps `Managed/_git/Apps`, branch `dev`). Static reading only: nothing was built or run. This replaces the second-hand map of 2026-11-16, which came from the PRD. Paths are relative to the repo root.
 
 ## Verdict for QA
 

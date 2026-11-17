@@ -1,6 +1,6 @@
 # Repo map: QA_Automation (Old World Fleet UI tests)
 
-> Read 2026-11-17 from `C:\src\QA_Automation` (Azure DevOps `Managed/_git/QA_Automation`, branch `main`). Static reading only: the suite was not run.
+> Read 2026-11-17 from `C:\Users\skhan\Repos\QA_Automation` (Azure DevOps `Managed/_git/QA_Automation`, branch `main`). Static reading only: the suite was not run.
 
 ## Verdict for QA
 

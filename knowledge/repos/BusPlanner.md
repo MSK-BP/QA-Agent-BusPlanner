@@ -1,6 +1,6 @@
 # Repo map: BusPlanner (Old World monorepo)
 
-> Read 2026-11-17 from `C:\src\BusPlanner` (Azure DevOps `Unmanaged/_git/BusPlanner`, branch `main`, shallow clone, latest commit 2026-11-13). Top-level map by sampling (Glob and Grep); nothing was built or run. Some searches were cut short: marked "incomplete". The repo has its own `CLAUDE.md` with build notes; read it before deeper work.
+> Read 2026-11-17 from `C:\Users\skhan\Repos\BusPlanner` (Azure DevOps `Unmanaged/_git/BusPlanner`, branch `main`, shallow clone, latest commit 2026-11-13). Top-level map by sampling (Glob and Grep); nothing was built or run. Some searches were cut short: marked "incomplete". The repo has its own `CLAUDE.md` with build notes; read it before deeper work.
 
 ## Verdict for QA
 
