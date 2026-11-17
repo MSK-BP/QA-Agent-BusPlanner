@@ -1,0 +1,7 @@
+# Protected patterns for this tenant. Loaded by the core guard together with the
+# core generic list (which already covers "*-prod*" names, destructive SQL and
+# force pushes). One regular expression per line; # starts a comment.
+#
+# Add every production hostname, database, IP and cloud subscription, e.g.
+#   (?i)\bapp\.example\.com\b
+#   \b10\.0\.0\.12\b

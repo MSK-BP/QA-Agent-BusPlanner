@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "playwright": {
+      "command": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "${LOCALAPPDATA}\\qa-agent\\playwright-mcp\\node_modules\\@playwright\\mcp\\cli.js",
+        "--config", ".local/playwright.json"
+      ]
+    }
+  }
+}

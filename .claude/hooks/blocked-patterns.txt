@@ -1,0 +1,17 @@
+# Core protected patterns: generic, for every tenant.
+# One regular expression per line. A shell command or browser action whose input
+# matches any line is blocked. Lines starting with # are ignored.
+#
+# Each tenant adds its real production hosts, databases and IPs in
+# tenants/<name>/blocked-patterns.txt. The guard loads all of them.
+
+# Generic production-looking hosts
+(?i)\bprod[-.][\w.-]+
+(?i)[\w-]+[-.]prod\b
+(?i)\bproduction[-.][\w.-]+
+
+# Destructive database statements
+(?i)\b(drop|truncate)\s+(table|database|schema)\b
+
+# Rewriting shared history
+(?i)git\s+push\s+.*(--force|-f\b)

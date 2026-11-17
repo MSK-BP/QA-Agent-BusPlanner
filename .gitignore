@@ -1,0 +1,17 @@
+# Tenants are separate git repositories and never part of the core.
+tenants/*
+!tenants/README.md
+
+# Machine-local state
+.qa-tenant
+.local/
+.claude/settings.local.json
+
+# Secrets, in case one is ever dropped in the core by mistake
+*Token*.txt
+*Creds*.txt
+.env
+.env.*
+*.pfx
+*.pem
+secrets/
