@@ -1,6 +1,8 @@
 # Tenants are separate git repositories and never part of the core.
 tenants/*
 !tenants/README.md
+# This is the combined BusPlanner repository: it tracks its own tenant.
+!tenants/busplanner/
 
 # Machine-local state
 .qa-tenant

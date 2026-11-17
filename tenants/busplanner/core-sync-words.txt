@@ -1,0 +1,8 @@
+# Words that must never reach the core repository. Checked by harness/sync-core.ps1
+# before it copies a change there. One literal word or phrase per line.
+busplanner
+georef
+MSK-BP
+Ride Support
+BP Unified
+Turns app

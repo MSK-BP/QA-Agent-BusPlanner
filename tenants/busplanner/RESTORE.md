@@ -1,11 +1,6 @@
 # Restore after a PC reset
 
-The QA hub is two git repositories:
-
-| Part | Where it lives | Holds |
-|---|---|---|
-| Core | `MSK100/QA-Agent` (GitHub, private) | `CLAUDE.md`, `.claude/` (skills, agents, hooks), `harness/`, `templates/` |
-| This tenant | `MSK-BP/QA-Agent-BusPlanner` (GitHub, private) | `TENANT.md`, `knowledge/`, `blocked-patterns.txt`, `playwright.json`, `harness/` (ado, unified, creds, setup), `reports/` |
+The QA hub is one git repository: `MSK-BP/QA-Agent-BusPlanner` (GitHub, private). It holds the core at the root (`CLAUDE.md`, `.claude/` with skills, agents and hooks, `harness/`, `templates/`) and this tenant in `tenants/busplanner/` (`TENANT.md`, `knowledge/`, `blocked-patterns.txt`, `playwright.json`, `harness/`, `reports/`).
 
 Not in git, so keep a copy elsewhere (OneDrive or a password manager):
 
@@ -16,13 +11,11 @@ Not in git, so keep a copy elsewhere (OneDrive or a password manager):
 
 ## Steps
 
-1. Install Git, then clone the core and this tenant:
+1. Install Git, then clone the repository:
    ```
-   git clone https://github.com/MSK100/QA-Agent.git "QA Agent"
-   cd "QA Agent"
-   git clone https://github.com/MSK-BP/QA-Agent-BusPlanner.git tenants\busplanner
+   git clone https://github.com/MSK-BP/QA-Agent-BusPlanner.git "QA Agent"
    ```
-   Sign in to both GitHub accounts with the GitHub CLI: run `gh auth login --web` twice, approving the code once in the MSK100 browser profile and once in the MSK-BP one. Then make each repo always use its own account, whichever is active in `gh`, by adding this to `.git\config` (core: `MSK100`) and `tenants\busplanner\.git\config` (`MSK-BP`):
+   Sign in to GitHub with the GitHub CLI (`gh auth login --web`, in the MSK-BP browser profile). Then make the repo always use that account, whichever is active in `gh`, by adding this to `.git\config`:
    ```
    [credential "https://github.com"]
    	helper =
