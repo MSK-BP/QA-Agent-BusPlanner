@@ -261,3 +261,5 @@ a11y sweeps exist only for GPS Plus, chatbot, NoModules, AskAi (`docs/testing/Fr
 - Whether a branch policy makes the frontend PR pipeline a required check (not in the YAML).
 - Whether `react-hook-form` is used beyond LoginPage; exact form validation patterns in T&A pages.
 - Whether any test depends on the machine time zone (no `TZ` pin in the Jest config).
+
+- **Seen 2026-11-19 on US staging (build `c7a2c81`):** the signed-in shell (sidebar with Dashboard, Time Card, Administration ...) exposes no `nav` element and no `role=navigation`: 0 links were found inside a navigation landmark. Locate the menu by link names, not by landmark. Possible accessibility gap (WCAG 1.3.1 / 2.4.1), not yet raised.

@@ -15,7 +15,7 @@ You are given: the case file path, the run folder, the result file path to write
 4. Record the build: the deployed commit or version the app or API reports (`config.json`, a health or version endpoint, the page footer). Write "unknown" if none is shown.
 
 ## Channels
-- **ui**: the Playwright tools (`mcp__playwright__browser_*`). Find controls by role and accessible name from the snapshot. Act as the role named in the step. Check who is signed in before the first step; if it is not the case's role, record "signed in as <who>, case needs <role>" and stop. Never type a password: if a sign-in page appears, stop and record it. Take a screenshot for each expected line you check. Read console messages only after the case's page has loaded, and record only those.
+- **ui**: the Playwright tools (`mcp__playwright__browser_*`). Find controls by role and accessible name from the snapshot. Act as the role named in the step. Before the first ui step, and whenever a step names a different role, load that role's saved sign-in with `browser_set_storage_state` from `<run folder>\auth\<env>-<role>.json` (the run folder is the evidence folder's grandparent). If the file does not exist, record "no saved sign-in for <env>-<role>" and stop. If the app then shows a sign-in page, record "saved sign-in for <env>-<role> expired" and stop. Never type a password and never read the sign-in file yourself. Take a screenshot for each expected line you check. Read console messages only after the case's page has loaded, and record only those.
 - **api**: the tenant's API helper named in `environments.md`, or a plain HTTP call to an allowed host. Record the method, path, status code and the fields the expected line names. Never record tokens or cookies.
 - **sql**: the tenant's read-only SQL helper. Record the query and the rows. Never write.
 - **device**: the device tools named in `environments.md`. If none are set up, record "device channel not available" for those lines.
@@ -23,7 +23,7 @@ You are given: the case file path, the run folder, the result file path to write
 ## Evidence
 - Put the full date and time with the time zone (ISO 8601, e.g. `2026-11-18T02:23:25+05:00`) on every step and every evidence file.
 - Keep raw tool output, not a retyped copy: for HTTP, the command and its full output with status line and headers (`curl -i`); for SQL, the helper's output; for the browser, the snapshot excerpt and the screenshot.
-- The Playwright tools can save only inside their output folder (the tenant run folder's `browser\`). Save there as `<run-id>-<ID>-E<n>.png`, then copy the file into the run's evidence folder.
+- The Playwright tools save inside the tenant run folder (their output folder). Save screenshots straight into the evidence folder as `<ID>-E<n>.png`, using its full path.
 
 ## Rules
 - Do the steps as written, in order. If a step cannot be done as written, do not improvise a different path: record the step, what blocked it, and stop the case there.

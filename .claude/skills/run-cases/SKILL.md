@@ -11,7 +11,8 @@ Run `$ARGUMENTS`.
 2. Run `harness\cases.ps1 -Action validate`. Stop on errors in the selected cases.
 3. Create the run: `harness\cases.ps1 -Action new-run <selector> -Env <env> -Json`. Add `-Rehearsal` only if the user said "rehearsal": then unapproved cases run too, and nothing counts for sign-off. The JSON gives the run folder, the evidence folder and two lists: `Sequential` (ui or device cases: one browser, one device) and `Parallel` (api and sql only).
 4. Get the data prefix: `QA-AUTO-<tester initials>-`. Ask once if you do not know the tester's initials.
-5. Record the build under test in RUN.md (`build:`), from the app's `config.json`, a health or version endpoint, or the deployed commit.
+5. If the run has ui cases: make sure each environment and role it needs has a fresh saved sign-in in `<run folder>\auth\<env>-<role>.json`. If the tenant's tests README names a scripted sign-in helper, run it for each one (it signs in through the API on non-production environments; you never see the credentials). Otherwise ask the tester to run `harness\save-signin.ps1` and sign in.
+6. Record the build under test in RUN.md (`build:`), from the app's `config.json`, a health or version endpoint, or the deployed commit.
 
 ## 2. Run
 - For each case, start one `case-runner` with: the case file path, the result file path (`<run folder>/<ID>.md`), the evidence folder, the environment, the data prefix, and whether it is a rehearsal.

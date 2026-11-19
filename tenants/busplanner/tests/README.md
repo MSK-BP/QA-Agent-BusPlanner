@@ -18,7 +18,7 @@ Read `knowledge/environments.md` first, including the hard rules. In short:
 
 | Channel | Tool | Where | Notes |
 |---|---|---|---|
-| `ui` | Playwright MCP, persisted sign-in | dev and staging app hosts, CA and US | The tester signs in once in the Playwright window. The agent never types a password |
+| `ui` | Playwright MCP, an isolated browser per session | dev and staging app hosts, CA and US | Loads the role's saved sign-in. **Scripted sign-in helper:** `harness\signin.ps1 -Env <env> -Role <role>` (API sign-in from the credentials file, dev and staging only, about 1 hour) |
 | `api` | `harness/unified.ps1` (sign-in, read-only) or a plain GET to a health or config URL | dev and staging API hosts | No write helper yet. A case that must create data through the API is Blocked until one exists |
 | `sql` | `harness/sql.ps1`, read-only | Unified dev and staging servers, over the CA VPN | Each tester uses their own SQL login (`BP_QA_SQL_LOGIN`) |
 | `device` | Appium (not set up) | Turns on an Android emulator or tablet | Needs a Turns APK and a QA quick code (access A2). Device lines are Blocked until then |
@@ -31,7 +31,7 @@ Read `knowledge/environments.md` first, including the hard rules. In short:
 
 | Role in a case | Identity | Status |
 |---|---|---|
-| `staging-qa` | The staging QA account (`knowledge/environments.md`) | Available on CA and US staging |
+| `staging-qa` | The staging QA account in each tester's own credentials file | Available on CA and US staging: `harness\signin.ps1 -Env us-staging` or `-Env ca-staging` |
 | Ride Support roles (`transportation-1`, `school-reviewer`, ...) | One test account per role | **Not available yet** (access A5). Cases that need them are Blocked |
 
 ## Team rules

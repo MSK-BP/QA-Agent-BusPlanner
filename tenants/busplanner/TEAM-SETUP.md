@@ -63,7 +63,7 @@ Time: about one hour. Windows only (the hooks and helpers are PowerShell).
 1. Open Claude, Code tab, and open the `QA Agent` folder. The session start names the active tenant: `busplanner`.
 2. In claude.ai settings, connect Atlassian (Jira and Confluence), Slack and Microsoft 365.
 3. Ask the agent to check the set-up: "check my set-up: ADO, SQL dev and staging, Jira". It runs `ado.ps1`, `sql.ps1 -Action ping` and a Jira search, all read-only.
-4. The first time the agent opens the browser, sign in to staging yourself in the Playwright window. The agent never types a password. The sign-in persists in `%LOCALAPPDATA%\qa-agent\browser-profiles\busplanner`.
+4. Browser cases sign in by themselves: before a run the agent calls `tenants\busplanner\harness\signin.ps1 -Env us-staging` (or `ca-staging`), which signs in through the API with the staging account from **your** credentials file and saves the session for the browser. Dev and staging only. Nobody types a password, and the agent never sees it.
 
 ## 5. How we work
 

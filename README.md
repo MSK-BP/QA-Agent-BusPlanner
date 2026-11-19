@@ -104,7 +104,17 @@ Plain requests route to the same skills as the slash commands.
 
 ## Browser
 
-`.mcp.json` runs the Playwright MCP server (`@playwright/mcp`, pinned in `harness\setup-machine.ps1`) with `node.exe` directly from `%LOCALAPPDATA%\qa-agent\playwright-mcp`. It doesn't depend on `PATH` or `npx`, and `node_modules` stays out of the hub. Settings come from `.local\playwright.json`, which `use-tenant.ps1` builds: installed Chrome, headed, 1440x900, screenshots to the tenant's run folder (`browser/`), and the tenant's blocked origins. The browser profile persists per tenant in `%LOCALAPPDATA%\qa-agent\browser-profiles\<tenant>`, outside the hub and any synced folder, so the user signs in once and later sessions reuse it until the app's session expires. Delete that folder to sign out. The user signs in in the browser window; the agent never types a password.
+`.mcp.json` runs the Playwright MCP server (`@playwright/mcp`, pinned in `harness\setup-machine.ps1`) with `node.exe` directly from `%LOCALAPPDATA%\qa-agent\playwright-mcp`. It doesn't depend on `PATH` or `npx`, and `node_modules` stays out of the hub. Settings come from `.local\playwright.json`, which `use-tenant.ps1` builds: installed Chrome, headed, 1440x900, the tenant's blocked origins, and the tenant's run folder as the output folder.
+
+Each Claude session gets its own **isolated** browser, kept in memory. Sessions never lock each other out of a shared profile, so several sessions (and several testers) can run browser cases at the same time.
+
+Sign-ins are saved per environment and role, never typed by the agent:
+
+```powershell
+.\harness\save-signin.ps1 -Env staging -Role admin -Url https://app.example-staging.com/
+```
+
+A Chrome window opens; a person signs in; the sign-in (cookies, local storage, IndexedDB) is saved to `<run folder>\auth\<env>-<role>.json` and the window closes. A session loads it with the `browser_set_storage_state` tool, so one session can switch roles between steps. The file holds session tokens: it stays in the run folder (outside synced folders), is git-ignored, and the agent is denied reading it. Save it again when the app's session expires.
 
 ## Headless and scheduled use
 

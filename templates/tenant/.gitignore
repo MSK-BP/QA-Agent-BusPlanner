@@ -18,3 +18,5 @@ reports/audit.log
 reports/runs/
 reports/headless/
 reports/browser/
+# Saved sign-ins (session tokens), from harness/save-signin.ps1
+reports/auth/

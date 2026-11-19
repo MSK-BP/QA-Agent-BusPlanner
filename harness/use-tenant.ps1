@@ -34,27 +34,27 @@ if ($RunRoot) {
 $env:QA_TENANT = $Name
 $runDir = (Get-QaTenant).RunRoot
 Remove-Item Env:QA_TENANT
-New-Item -ItemType Directory -Force (Join-Path $runDir 'browser') | Out-Null
+New-Item -ItemType Directory -Force (Join-Path $runDir 'browser'), (Join-Path $runDir 'auth') | Out-Null
 
 # Playwright config: core defaults, plus the tenant's blocked origins and its
 # run folder for screenshots. Written to .local/, which is not committed.
 #
-# The browser profile persists per tenant so the user signs in once and later
-# sessions reuse it. It lives under %LOCALAPPDATA%, never in the hub: the hub
-# may sit in a synced folder (OneDrive), and a profile holds session cookies
-# and tokens. One profile per tenant, so no tenant ever sees another's sign-in.
-# Delete the folder to sign out everywhere.
-$profileDir = Join-Path $env:LOCALAPPDATA "qa-agent\browser-profiles\$Name"
-New-Item -ItemType Directory -Force $profileDir | Out-Null
+# Every Claude session gets its own isolated, in-memory browser, so sessions
+# never lock each other out of a shared profile and can run in parallel.
+# Sign-ins are saved per environment and role by harness\save-signin.ps1 into
+# <run folder>\auth\<env>-<role>.json (outside the hub when a run folder is
+# set), and a session loads one with the browser_set_storage_state tool (the
+# "storage" capability). The run folder is the browser's output folder, so the
+# tools can read those files and write evidence straight into runs\<run-id>\.
 $cfg = [ordered]@{
     browser   = [ordered]@{
-        isolated       = $false
-        userDataDir    = $profileDir
+        isolated       = $true
         launchOptions  = @{ channel = 'chrome' }
         contextOptions = @{ viewport = @{ width = 1440; height = 900 } }
     }
     console   = @{ level = 'warning' }
-    outputDir = (Join-Path $runDir 'browser')
+    capabilities = @('storage')
+    outputDir = $runDir
     network   = @{ blockedOrigins = @() }
 }
 $tenantCfg = Join-Path $root 'playwright.json'
@@ -68,6 +68,6 @@ $json =$cfg | ConvertTo-Json -Depth 6
 
 "Active tenant: $Name"
 "Playwright config: .local\playwright.json ($($cfg.network.blockedOrigins.Count) blocked origins)"
-"Browser profile:   $profileDir"
+"Browser:           isolated per session; saved sign-ins in $(Join-Path $runDir 'auth')"
 "Run folder:        $runDir"
 "Restart the Claude session to load it."
