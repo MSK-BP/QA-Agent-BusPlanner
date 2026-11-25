@@ -20,3 +20,4 @@ Rules:
 - Every expected result must trace to a stated requirement, a rule in `<tenant>/knowledge/domain.md`, or observed code. Mark any other as ASSUMPTION.
 - Push each case to the lowest level that can prove it.
 - Prefer fewer cases that each catch a distinct failure over many near-duplicates.
+- When you write case files, set `depends-on` for a case that needs another case's result, and `resources` for anything two cases must not use at the same time (see the tests README, "Running cases in parallel"). Prefer cases that set up their own data, so they need no dependency and can run in parallel.

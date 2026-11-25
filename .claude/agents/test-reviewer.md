@@ -12,6 +12,7 @@ For each test ask:
 3. Is the expected value derived independently, or copied from the code under test?
 4. Can it pass or fail for reasons unrelated to the feature (timing, order, shared data, the clock, locale)?
 5. Is it at the right level, or is a slow UI test doing a unit test's job?
+6. For markdown cases: does it need another case's result without saying so in `depends-on`, or share something (a build folder, a device, a data record, an account) with another case without saying so in `resources`?
 
 For the set as a whole: which requirement or risk has no test, and which tests are duplicates.
 

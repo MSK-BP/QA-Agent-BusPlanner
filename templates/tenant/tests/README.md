@@ -35,6 +35,19 @@ A person changes an approved case only through a new review. Editing the steps o
 - Data the case creates starts with the tester's prefix (`QA-AUTO-<initials>-`), and Clean-up removes it.
 - The lowest channel that can prove a result wins: SQL or API before UI when the UI adds nothing.
 
+## Running cases in parallel
+
+`/run-cases` plans every run in **waves** (`harness\cases.ps1 -Action new-run`). The cases of one wave run at the same time, at most 4 by default (`-MaxParallel`). Two optional fields in the case front matter drive the plan:
+
+| Field | Value | Meaning |
+|---|---|---|
+| `depends-on` | case IDs, e.g. `[MOD-001]` | Start this case only after those cases passed. Use it when a case needs another case's build, data or end state. |
+| `resources` | `kind:name` items, e.g. `[build:MyRepo, device:Tablet-A]` | No other case may hold the same item at the same time. A bare kind (`device`) means any item of that kind. `exclusive` runs the case alone (timing and load cases). |
+
+Without `resources`, the channel gives a safe default: `ui` holds `browser:session` (all runners in one Claude session share one browser), `device` holds `device` (any device), `cli` holds `build` (any build folder). `api` and `sql` cases hold nothing, so they run in parallel unless they declare a resource, for example the same test-data record (`data:<record>`).
+
+`harness\cases.ps1 -Action validate` reports a dependency that is not a case, a circular dependency and a badly formed resource. The plan is written to the run's RUN.md (section Plan).
+
 ## Commands
 
 | Do | Command |

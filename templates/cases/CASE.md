@@ -11,6 +11,9 @@ roles: [role-name]              # who acts in the UI; one signed-in identity per
 env: dev                        # lowest allowed environment where the case can run
 data: []                        # named test data it needs (see the tenant's tests/README.md)
 tags: []                        # free labels: smoke, regression, gap, ...
+depends-on: []                  # case IDs that must pass before this one starts (a build, data, a prior state)
+resources: []                   # what no other case may use at the same time: build:<repo>, device:<name>,
+                                # browser:session, data:<record>. Empty = the channel default (see the tests README)
 status: draft                   # draft -> reviewed (agent review) -> approved (a person) -> retired
 approved-by:                    # the person who approved it; required when status is approved
 convert-later:                  # what a coded framework should automate later: ui | api | none

@@ -16,10 +16,25 @@
   -Action validate  Checks every case file. Exit code 1 if any error.
   -Action new-run   Creates a run folder for the selected cases and prints it. Only
                     approved cases, unless -Rehearsal (then draft and reviewed too).
+                    Plans the run in waves: the cases of one wave can run at the same
+                    time (at most -MaxParallel, default 4). A case goes in a wave only
+                    after every case it 'depends-on' is in an earlier wave, and never
+                    with a case that holds the same resource.
   -Action matrix    Writes tests/MATRIX.md and tests/cases.csv from the cases and
                     the latest result of each.
 
   Filters take comma-separated values: -Module ride-support -Priority P1,P2.
+
+  Parallel planning fields (optional, in the case front matter):
+    depends-on: [ID, ...]      cases that must pass before this one starts
+    resources:  [kind:name]    things the case uses that no other case may use at
+                               the same time, e.g. build:MyRepo, device:Pixel-Tablet,
+                               browser:session, data:district-12. A bare kind
+                               (device) means "any of that kind" and conflicts with
+                               every device:<name>. 'exclusive' runs the case alone
+                               (timing and load cases).
+  Without 'resources', the channels give a safe default: ui -> browser:session,
+  device -> device, cli -> build. api and sql cases hold nothing by default.
 
 .EXAMPLE
   .\harness\cases.ps1 -Action validate
@@ -39,6 +54,7 @@ param(
     [string[]] $Id,
     [string] $Env,
     [switch] $Rehearsal,
+    [ValidateRange(1, 16)] [int] $MaxParallel = 4,
     [switch] $Json
 )
 
@@ -48,7 +64,8 @@ $tenant = Get-QaTenant
 if (-not $tenant) { throw 'No active tenant. Run harness\use-tenant.ps1 <name> first.' }
 $tests = Join-Path $tenant.Root 'tests'
 $utf8 = New-Object Text.UTF8Encoding $false
-$listFields = 'channels', 'roles', 'spec', 'data', 'tags'
+$listFields = 'channels', 'roles', 'spec', 'data', 'tags', 'depends-on', 'resources'
+$resourcePattern = '^[a-z][a-z0-9-]*(:[A-Za-z0-9._-]+)?$'
 $statuses = 'draft', 'reviewed', 'approved', 'retired'
 $channelsAllowed = 'ui', 'api', 'sql', 'device', 'cli'
 
@@ -102,9 +119,64 @@ function Get-Cases {
             Priority = Get-Field $f 'priority'; Status = Get-Field $f 'status'; Env = Get-Field $f 'env'; Ticket = Get-Field $f 'ticket'
             Channels = Get-Field $f 'channels'; Roles = Get-Field $f 'roles'; Tags = Get-Field $f 'tags'; Spec = Get-Field $f 'spec'
             ConvertLater = Get-Field $f 'convert-later'; ApprovedBy = Get-Field $f 'approved-by'
+            DependsOn = Get-Field $f 'depends-on'; DeclaredResources = Get-Field $f 'resources'
             Fields = $f; Body = $doc.Body; Expected = $expected; Path = $rel; File = $_.FullName; FileId = $_.BaseName; Broken = $false
         }
     }
+}
+
+function Get-Resources($c) {
+    # Declared resources, plus a safe default per channel when that kind is not declared.
+    $res = @($c.DeclaredResources)
+    $kinds = @($res | ForEach-Object { ($_ -split ':')[0] })
+    if ($c.Channels -contains 'ui' -and $kinds -notcontains 'browser') { $res += 'browser:session' }
+    if ($c.Channels -contains 'device' -and $kinds -notcontains 'device') { $res += 'device' }
+    if ($c.Channels -contains 'cli' -and $kinds -notcontains 'build') { $res += 'build' }
+    @($res | Select-Object -Unique)
+}
+
+function Test-ResourceClash([string[]] $a, [string[]] $b) {
+    foreach ($x in $a) {
+        foreach ($y in $b) {
+            if ($x -ieq $y) { return $true }
+            $kx = ($x -split ':')[0]; $ky = ($y -split ':')[0]
+            if ($kx -ieq $ky -and (($x -notmatch ':') -or ($y -notmatch ':'))) { return $true }
+        }
+    }
+    $false
+}
+
+function Get-Waves($picked, [int] $max) {
+    $inRun = @{}; foreach ($c in $picked) { $inRun[$c.Id.ToLower()] = $c }
+    $remaining = New-Object Collections.Generic.List[object]; $picked | ForEach-Object { $remaining.Add($_) }
+    $done = @{}; $waves = @(); $n = 0
+    while ($remaining.Count) {
+        $ready = @($remaining | Where-Object {
+            $c = $_
+            -not ($c.DependsOn | Where-Object { $inRun.ContainsKey($_.ToLower()) -and -not $done.ContainsKey($_.ToLower()) })
+        })
+        if (-not $ready) { throw "Cannot plan: circular depends-on among $(($remaining | ForEach-Object { $_.Id }) -join ', ')." }
+        $wave = @(); $held = @()
+        foreach ($c in $ready) {
+            if ($wave.Count -ge $max) { break }
+            $r = Get-Resources $c
+            if ($wave.Count -and (($r -contains 'exclusive') -or ($held -contains 'exclusive') -or (Test-ResourceClash $r $held))) { continue }
+            $wave += $c; $held += $r
+        }
+        $n++
+        foreach ($c in $wave) { $done[$c.Id.ToLower()] = $n; [void]$remaining.Remove($c) }
+        $waves += [pscustomobject]@{
+            Wave = $n
+            Cases = @($wave | ForEach-Object {
+                [pscustomobject]@{
+                    Id = $_.Id; Path = $_.Path
+                    DependsOn = @($_.DependsOn | Where-Object { $inRun.ContainsKey($_.ToLower()) })
+                    Resources = @(Get-Resources $_)
+                }
+            })
+        }
+    }
+    $waves
 }
 
 function Test-Match($value, [string] $filter) {
@@ -197,7 +269,25 @@ switch ($Action) {
             }
             if ($text -notmatch '(?m)^##\s+Clean-up') { $warnings.Add("${where}: no '## Clean-up' section (write 'None' if the case creates no data)") }
             if ($c.Channels -contains 'ui' -and -not $c.Roles) { $warnings.Add("${where}: ui case without 'roles'") }
+            foreach ($r in $c.DeclaredResources) { if ($r -cnotmatch $resourcePattern) { $errors.Add("${where}: resource '$r' is not 'kind' or 'kind:name' (lowercase kind)") } }
+            foreach ($d in $c.DependsOn) {
+                if ($d -ieq $c.Id) { $errors.Add("${where}: depends on itself"); continue }
+                $dep = $cases | Where-Object { -not $_.Broken -and $_.Id -ieq $d } | Select-Object -First 1
+                if (-not $dep) { $errors.Add("${where}: depends-on '$d' is not a case") }
+                elseif ($dep.Status -eq 'retired') { $warnings.Add("${where}: depends-on '$d', which is retired") }
+            }
         }
+        # Circular dependencies: walk every chain.
+        $byId = @{}; foreach ($c in $cases) { if (-not $c.Broken -and $c.Id) { $byId[$c.Id.ToLower()] = $c } }
+        $state = @{}
+        function Test-Cycle([string] $k, [string[]] $chain) {
+            if ($state[$k] -eq 2) { return }
+            if ($state[$k] -eq 1) { $errors.Add("circular depends-on: $((($chain + $k) | ForEach-Object { $byId[$_].Id }) -join ' -> ')"); return }
+            $state[$k] = 1
+            foreach ($d in $byId[$k].DependsOn) { if ($byId.ContainsKey($d.ToLower())) { Test-Cycle $d.ToLower() ($chain + $k) } }
+            $state[$k] = 2
+        }
+        foreach ($k in @($byId.Keys)) { Test-Cycle $k @() }
         "Cases checked: $(@($cases).Count). Errors: $($errors.Count). Warnings: $($warnings.Count)."
         $errors | ForEach-Object { "ERROR   $_" }
         $warnings | ForEach-Object { "WARNING $_" }
@@ -219,6 +309,21 @@ switch ($Action) {
         $statusFilter = if ($Rehearsal) { 'draft,reviewed,approved' } else { 'approved' }
         $picked = @(Select-Cases $cases $sel.Filters $sel.Ids $statusFilter | Sort-Object Priority, Module, Flow, Id)
         if (-not $picked) { throw "No $statusFilter cases match. Approved cases only, unless -Rehearsal." }
+        $waves = @(Get-Waves $picked $MaxParallel)
+        $order = @($waves | ForEach-Object { $_.Cases } | ForEach-Object { $_.Id })
+        $picked = @($order | ForEach-Object { $i = $_; $picked | Where-Object { $_.Id -eq $i } })
+        $external = @($picked | ForEach-Object {
+            $c = $_
+            $c.DependsOn | Where-Object { $order -notcontains $_ } |
+                ForEach-Object { [pscustomobject]@{ Case = $c.Id; DependsOn = $_ } }
+        })
+        if ($external) {
+            $latest = Get-LatestResults
+            $external = @($external | ForEach-Object {
+                $r = $latest[$_.DependsOn.ToLower()]
+                [pscustomobject]@{ Case = $_.Case; DependsOn = $_.DependsOn; LastVerdict = $(if ($r) { $r.Verdict } else { 'Not run' }); LastRun = $(if ($r) { $r.Run } else { '' }) }
+            })
+        }
         $label = if ($Suite) { $Suite } elseif ($Module) { $Module } elseif ($Ticket) { $Ticket } else { 'adhoc' }
         $label = ($label -replace '[^\w-]', '-').ToLower()
         $runId = "$(Get-Date -Format 'yyyy-MM-dd-HHmm')-$label-$($runEnv.ToLower())"
@@ -229,6 +334,8 @@ switch ($Action) {
         $parts = @('module', 'flow', 'priority', 'tag', 'ticket' | ForEach-Object { if ($sel.Filters[$_]) { "$_=$($sel.Filters[$_])" } }) + @($sel.Ids | ForEach-Object { "id=$_" })
         $selection = if ($Suite) { "suite $Suite" } else { $parts -join ' ' }
         $mode = if ($Rehearsal) { 'Rehearsal: unapproved cases included. These results do not count for a sign-off.' } else { 'Approved cases only.' }
+        $planRows = $waves | ForEach-Object { $w = $_; $w.Cases | ForEach-Object { "| $($w.Wave) | $($_.Id) | $(($_.DependsOn) -join ', ') | $(($_.Resources) -join ', ') |" } }
+        $extText = if ($external) { "`n`nDepends on cases outside this run (must have passed): " + (($external | ForEach-Object { "$($_.Case) needs $($_.DependsOn) (last: $($_.LastVerdict))" }) -join '; ') + '.' } else { '' }
         $run = @"
 ---
 run: $runId
@@ -246,6 +353,14 @@ $mode Evidence (screenshots, network logs) is outside git, in ``$evidence``.
 ## Verdict
 
 (Filled in at the end of the run.)
+
+## Plan
+
+$($waves.Count) wave(s), at most $MaxParallel case(s) at the same time. A wave's cases run together; a case starts only when the cases it depends on have passed.$extText
+
+| Wave | Case | Depends on | Resources |
+|---|---|---|---|
+$($planRows -join "`n")
 
 ## Cases
 
@@ -266,10 +381,15 @@ $($rows -join "`n")
             Evidence = $evidence
             Env = $runEnv
             Rehearsal = [bool]$Rehearsal
-            Sequential = @($picked | Where-Object { $_.Channels -contains 'ui' -or $_.Channels -contains 'device' -or $_.Channels -contains 'cli' } | ForEach-Object { $_.Path })
-            Parallel = @($picked | Where-Object { -not ($_.Channels -contains 'ui' -or $_.Channels -contains 'device' -or $_.Channels -contains 'cli') } | ForEach-Object { $_.Path })
+            MaxParallel = $MaxParallel
+            Waves = $waves
+            ExternalDependencies = $external
         }
-        if ($Json) { $out | ConvertTo-Json -Depth 4 } else { $out | Format-List | Out-String -Width 220 }
+        if ($Json) { $out | ConvertTo-Json -Depth 6 } else {
+            $out | Select-Object RunId, RunFolder, Evidence, Env, Rehearsal, MaxParallel | Format-List | Out-String -Width 220
+            $waves | ForEach-Object { $w = $_; "Wave $($w.Wave): " + (($w.Cases | ForEach-Object { $_.Id + ' [' + (($_.Resources) -join ',') + ']' }) -join '  ') }
+            if ($external) { $external | ForEach-Object { "External dependency: $($_.Case) needs $($_.DependsOn) (last: $($_.LastVerdict) $($_.LastRun))" } }
+        }
     }
 
     'matrix' {

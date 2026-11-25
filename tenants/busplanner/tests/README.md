@@ -28,6 +28,19 @@ Read `knowledge/environments.md` first, including the hard rules. In short:
 
 **Never** exercise a path that writes through BP Info (GPS+ Route Management: substitute vehicle, reassign driver, bus change) without a named go-ahead for that run. Dev and staging point at production BP Info.
 
+## Resources for parallel runs
+
+Generic rules: the hub's `templates/tenant/tests/README.md`, "Running cases in parallel". Use these names in `resources:` so the planner sees the clashes:
+
+| Resource | Use it when the case |
+|---|---|
+| `build:BusPlannerUnified` | builds or runs tests in `%USERPROFILE%\Repos\qa-checkouts\BusPlannerUnified-dev` (shared `bin` and `obj`) |
+| `build:Turns` | builds the Turns app in the Apps clone |
+| `device:QA-Phone-Pixel8-API36`, `device:QA-Tablet-PixelTablet-API36`, `device:QA-Tablet-10in-API30` | uses that emulator (one case per emulator at a time) |
+| `browser:session` | uses the Playwright browser (the default for `ui`; one per Claude session) |
+| `data:<client>-<record>` | changes a shared record on dev or staging, for example `data:NCPS-absence-types` |
+| `exclusive` | measures time or load, and must run alone |
+
 ## Roles
 
 | Role in a case | Identity | Status |

@@ -10,7 +10,7 @@ Resolve the cases with `harness\cases.ps1` and the selector (`-Suite`, `-Id`, `-
 
 ## Review (no "approve" in the arguments)
 1. Run `harness\cases.ps1 -Action validate` and fix format errors in the selected files.
-2. Give `test-reviewer` the case files and their source (`spec`, `ticket`, the test plan), not anyone's reasoning. Ask the questions in step 6 of `/write-cases`.
+2. Give the case files and their source (`spec`, `ticket`, the test plan) to reviewers, not anyone's reasoning, the same way as step 6 of `/write-cases`: one `test-reviewer` per batch of about 5 cases, all started in one message, then one reviewer for the whole set (gaps and duplicates). One batch is enough for 5 cases or fewer.
 3. Apply fixes that do not change the meaning of a case. List changes to meaning as proposals and do not apply them.
 4. Set `status: reviewed` on cases that pass. A case that was `approved` and whose Steps or Expected changed goes back to `reviewed`, and `approved-by` is cleared.
 5. Reply with findings per case and the cases ready for approval.
