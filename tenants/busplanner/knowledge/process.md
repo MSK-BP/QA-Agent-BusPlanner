@@ -195,7 +195,7 @@ All QA documentation goes under one folder: PE home > **QA Documentation** (fold
 | Subfolder | Folder id | Pages |
 |---|---|---|
 | Test Approach: Agentic Testing and Conventional Automation | 293502990 | Agentic Test Approach: Track 1 and Track 2 (PE/293699587, PDF attached) |
-| ETL Testing: BP Pro to BusPlanner Unified | 293797890 | ETL: Questions and Findings for the Dev Team (QA POC) (PE/293502993, native page so devs answer inline; source `reports/2026-11-25-etl-dev-questions.md`) |
+| ETL Testing: BP Pro to BusPlanner Unified | 293797890 | ETL: Questions and Findings for the Dev Team (QA POC) (PE/293502993, native page so devs answer inline; source `reports/2026-11-25-etl-dev-questions.md`); ETL Test Approach: Data Validation Utility (PE/294879234; source `reports/2026-11-24-etl-test-approach.md`) |
 
 Publishing pattern (Sharaiz, 2026-11-25): put the **full document content** on the page as native Confluence content. Attach the PDF only as a file card at the end, under "Attachment". Never embed the PDF with the PDF viewer: readers do not want to scroll a PDF inside Confluence.
 
