@@ -35,6 +35,14 @@ Raise these with the owners. Never copy the values.
 - `Managed/Apps`: test credentials in `AppTests/Constants.cs` and `BPInfoServiceClientDemoFixture.cs`; some test names carry a password, so it shows in the `Apps_Test` results. The Android keystore and its password are in the repo (`Turns/Turns.csproj`).
 - `Apps_Test` calls customer production trackers (`tracker*.mybusplanner.*`) from CI. These hosts are now in `blocked-patterns.txt`.
 
+
+## Jira Dev board (checked 2026-11-25)
+
+- Reached through the Atlassian MCP server in the hub's `.mcp.json` (`https://mcp.atlassian.com/v2/mcp`), signed in with the user's own Atlassian account. Site cloudId `a894ac52-b12c-41a1-bd1f-a9e06e5aeb8c`.
+- Boards visible: **Dev board** (id 68, Scrum, project ENG "Development"), IN board (167, Kanban), PROD board (134, Kanban), SOC board (35, simple), SPT board (101, Kanban).
+- Dev board sprints: two weeks. Active on 2026-11-25: **ENG Sprint 92** (id 175, 14 to 27 November, no goal set). Next: Sprint 93 (27 Nov to 11 Dec), 94 (11 to 25 Dec).
+- Sprint 92 on 2026-11-25: 527 issues including sub-tasks; 307 open issues excluding sub-tasks; **105 Ready for QA, 18 QA Review**. Most QA-waiting items are BP Unified (GPS+, chatbot, T&A, ETL, login flow). Refresh before relying on these numbers: `sprint in openSprints() AND project = ENG AND status in ("Ready for QA", "QA Review", "In QA")`.
+
 ## What needs a team member
 
 | # | Need | Why | Ask |
