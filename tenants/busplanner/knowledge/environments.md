@@ -90,7 +90,7 @@ Never written here. Sources:
 
 - Environment variables for backend tests (names only): `BP_TEST_SQL_SERVER`, `BP_TEST_SQL_CONNECTION`, `BP_TEST_DB_SUFFIX`, `BP_QA_DB_REUSE`. Full list in the tests map section 2.
 - All secrets live in the local file `Infra Creds.txt` (git-ignored, and the agent's Read tool is denied on it). Never open, print or copy it. Use the helpers, which load it internally and print no secret:
-  - Azure DevOps (GET only): `harness/ado.ps1 <api path>`. `AZURE_DEVOPS_PAT` overrides the file.
+  - Azure DevOps (GET only): `harness/ado.ps1 <api path>`. The helper adds `_apis/` itself: pass `git/repositories/<repo>/pullrequests/<n>`, not `_apis/git/...` (a doubled prefix returns 404). `AZURE_DEVOPS_PAT` overrides the file.
   - Unified staging (sign in, then one read-only call): `harness/unified.ps1 -Env us-staging|ca-staging [-Client CODE] -Action envs|login|get|graphql`.
   - Unified writes (added 2026-11-25): `harness/api-write.ps1 -Env <env> -Method POST|PUT|PATCH|DELETE -Path <api path> -Body <json> [-Case <id>]`, then `-Action ledger` or `-Action cleanup`. Guards: dev and staging hosts only; refuses `api/gpsplus/route-management` (hard rule 1), `api/auth` and password paths, and chatbot message and eval runs unless `-Billable` (hard rule 4); a POST body must contain `QA-AUTO-`; PUT, PATCH and DELETE only on records it created (`-NoMarker` and `-ExistingRecord` relax this on dev only). Ledger: `<run root>\writes\ledger.jsonl`. Tested 2026-11-25 on US staging (NCPS): absence type created (201, the API returns a bare GUID), updated (204) and deleted (204). T&A deletes look like soft deletes (`IsDeleted`), so the row stays in the database marked deleted.
 - Staging QA account, verified by sign-in on 2026-11-10:
