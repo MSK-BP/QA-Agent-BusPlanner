@@ -19,7 +19,7 @@ Read `knowledge/environments.md` first, including the hard rules. In short:
 | Channel | Tool | Where | Notes |
 |---|---|---|---|
 | `ui` | Playwright MCP, an isolated browser per session | dev and staging app hosts, CA and US | Loads the role's saved sign-in. **Scripted sign-in helper:** `harness\signin.ps1 -Env <env> -Role <role>` (API sign-in from the credentials file, dev and staging only, about 1 hour) |
-| `api` | `harness/unified.ps1` (sign-in, read-only) or a plain GET to a health or config URL | dev and staging API hosts | No write helper yet. A case that must create data through the API is Blocked until one exists |
+| `api` | Reads: `harness/unified.ps1 -Action get`. Writes: `harness/api-write.ps1 -Method POST|PUT|PATCH|DELETE -Path <api path> -Body <json> -Case <case id>` | dev and staging API hosts | Writes: POST bodies carry `QA-AUTO-`; PUT, PATCH and DELETE only on records the helper created; every write goes to `<run root>\writes\ledger.jsonl`. At the end of the run: `api-write.ps1 -Env <env> -Action cleanup`. It refuses route management (BP Info), auth and password paths, and billable chatbot calls |
 | `sql` | `harness/sql.ps1`, read-only | Unified dev and staging servers, over the CA VPN | Each tester uses their own SQL login (`BP_QA_SQL_LOGIN`) |
 | `device` | Appium (not set up) | Turns on an Android emulator or tablet | Needs a Turns APK and a QA quick code (access A2). Device lines are Blocked until then |
 
