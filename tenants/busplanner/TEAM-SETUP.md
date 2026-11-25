@@ -33,6 +33,10 @@ Time: about one hour. Windows only (the hooks and helpers are PowerShell).
    powershell -ExecutionPolicy Bypass -File .\harness\use-tenant.ps1 busplanner -RunRoot $env:USERPROFILE\Repos\qa-runs
    ```
 
+### Mobile testing (Android emulators)
+
+Only if you test Turns or another mobile app. No admin rights are needed. Follow `knowledge/environments.md`, section "Mobile devices": install JDK 17 and the Android command-line tools under `%LOCALAPPDATA%`, set the user variables `ANDROID_HOME` and `JAVA_HOME`, install the four packages with `sdkmanager --no-metrics`, create the three emulators with `avdmanager` (same names), then `npm install -g appium` and `appium driver install uiautomator2`. Check with `appium driver doctor uiautomator2`. The downloads are about 4 GB.
+
 ## 3. Your own secrets (never committed)
 
 1. Create `tenants\busplanner\Infra Creds.txt`. Git ignores it, and the agent cannot read it. The helpers read it without printing anything. Layout:

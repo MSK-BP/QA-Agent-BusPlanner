@@ -49,6 +49,31 @@ Rules:
 
 QA1 (built from `dev`) and QA2 (built from `stage`) exist per Confluence (`knowledge/process.md`). Found 2026-11-17 in `Managed/QA_Automation`: QA2 for client 1230 is `1230webqa2.busplannerweb.com` (Fleet). The Apps tests name beta hosts `<client>turnsbeta1.busplannerweb.com` and `<client>stsbhnbeta1.busplannerweb.com:9000` (`repos/Apps.md`). **None of these is approved yet.** TODO: QA1 hosts, the host pattern per client, and the user's approval before any test there.
 
+## Mobile devices: Android emulators and Appium (set up 2026-11-26)
+
+Turns (and the other MAUI apps) are tested on Android emulators on the tester's laptop. iOS needs a Mac and is not set up.
+
+| Item | Where | Version |
+|---|---|---|
+| JDK | `%LOCALAPPDATA%\Programs\jdk\jdk-17.0.21.1+2` (user env `JAVA_HOME`) | Microsoft OpenJDK 17.0.21 |
+| Android SDK | `%LOCALAPPDATA%\Android\Sdk` (user env `ANDROID_HOME`): cmdline-tools, platform-tools, emulator, platforms 36 and 30 | adb 1.0.41 |
+| System images | `system-images;android-36;google_apis;x86_64`, `system-images;android-30;google_apis;x86_64` | Android 16 and Android 11 |
+| Appium | global npm `appium` with driver `uiautomator2` | 4.0.1, driver 10.4.0 |
+| Acceleration | Windows Hypervisor Platform (WHPX), already on | `emulator -accel-check`: usable |
+
+| Emulator (AVD) | Device | Android | Screen | Cold boot |
+|---|---|---|---|---|
+| `QA-Phone-Pixel8-API36` | Pixel 8 | 16 (API 36) | 1080x2400, 420 dpi | 55 s |
+| `QA-Tablet-PixelTablet-API36` | Pixel Tablet | 16 (API 36) | 2560x1600, 320 dpi | 57 s |
+| `QA-Tablet-10in-API30` | 10.1 in WXGA tablet, for older fleet tablets | 11 (API 30) | 1280x800, 160 dpi | 40 s |
+
+- Start one: `& "$env:ANDROID_HOME\emulator\emulator.exe" -avd QA-Tablet-PixelTablet-API36 -no-snapshot-save` (add `-no-window` for a headless run). Check boot: `adb shell getprop sys.boot_completed` returns `1`.
+- Install an APK: `adb install -r <file>.apk`. Start Appium: `appium` (port 4723).
+- `appium driver doctor uiautomator2`: 0 required fixes. Optional and not needed for APKs: bundletool (app bundles), ffmpeg (screen recording), GStreamer (screen streaming).
+- `sdkmanager` is now a wrapper around the new `android sdk` command. From PowerShell, quote package names (`'"platforms;android-36"'`): the wrapper splits names at `;`. Pass `--no-metrics` so that the tool sends no usage data.
+- Turns supports Android 8 (API 26) and up (`SupportedOSPlatformVersion` 26.0). The API 30 tablet covers older OS versions; add an API 26 image if a client runs Android 8 or 9.
+- **Still missing for device cases:** a Turns test APK and a QA quick code or client code (access A2), and an approved Old World server (QA1/QA2, access A4), because Turns talks to BPInfo.
+
 ## Hard rules for non-production environments
 
 These come from what the repo shows, and are not optional:

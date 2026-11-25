@@ -48,7 +48,7 @@ Raise these with the owners. Never copy the values.
 | # | Need | Why | Ask |
 |---|---|---|---|
 | ~~A1~~ | Read access to the Apps repo | Done 2026-11-17 | Map: `repos/Apps.md` |
-| A2 | A Turns test build (APK), a QA quick code that maps to a dev or staging client, and a test tablet or emulator; Sentry read access (App Center is retired) | Device tests for F3 and F4b. The `Turns-Android` pipeline shows no artifacts, and it builds the wrong framework (`repos/Apps.md`) | Apps owner |
+| A2 | A Turns test build (APK) and a QA quick code that maps to a dev or staging client (emulators are ready since 2026-11-26, see `environments.md`); Sentry read access (App Center is retired) | Device tests for F3 and F4b. The `Turns-Android` pipeline shows no artifacts, and it builds the wrong framework (`repos/Apps.md`) | Apps owner |
 | ~~A3~~ | Old World code | Done 2026-11-17: one repo, `Unmanaged/BusPlanner` | Map: `repos/BusPlanner.md` |
 | A4 | QA1 and QA2 hosts for Old World, and approval to test there | QA2 for client 1230 is `1230webqa2.busplannerweb.com` (from `QA_Automation`). QA1 and the other clients are not known. Not yet approved in `environments.md` | Engineering lead, then the user |
 | A5 | Test accounts for dev and staging, one per Ride Support role | Role tests in F1 and F2 | Product or DevOps |
