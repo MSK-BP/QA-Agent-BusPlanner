@@ -24,3 +24,5 @@ E270CTV1Q2LKLM
 (?i)\b[a-z0-9-]+\.busplannertools\.com\b
 (?i)\blocator\.busplanner\.com\b
 (?i)\bftp\.busplanner\.com\b
+# ETL object storage bucket named in every local extract/load config (BusPlannerUnified dev 4fd03d48, 2026-11-24).
+(?i)\bbp-etl-production\b
