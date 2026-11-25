@@ -54,3 +54,7 @@ Raise these with the owners. Never copy the values.
 | A5 | Test accounts for dev and staging, one per Ride Support role | Role tests in F1 and F2 | Product or DevOps |
 | A6 | Datadog read access | Logs for triage | DevOps |
 | A7 | Slack channels for engineering, QA and releases; a Teams team if one is used | The agent sees only 2 general channels | Any member can add the user |
+
+## Security finding: Turns signing passwords (2026-11-25)
+
+- `Apps/MauiTurns/Turns/Turns.csproj` (Apps repo) holds the Android signing keystore passwords in plain text, in two property groups. Found during ENG-3306 test design. The values were not copied anywhere. Not yet reported: tell the Apps owner (the user decides who and when). Runners must never paste Turns build output that shows signing properties.

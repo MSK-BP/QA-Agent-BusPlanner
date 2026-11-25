@@ -503,3 +503,12 @@ A green PR run therefore reports a block of skipped tests. Skipped is not passed
 - Whether staging/prod are currently reconciled by ArgoCD or by the kubectl pipelines.
 - Whether a dedicated QA/test environment exists beyond dev and staging (none is defined in `deploy/` or `pipelines/`).
 - Test counts (tests were not executed) and real pass/fail state.
+
+## Learned in run 2026-11-25-2241 (ENG-3306)
+
+- **PRs are squash-merged.** PR 1902 has `mergeStrategy: squash`; `dev` has 0 merge commits in 378. Find a PR's commit with `git log --grep='^Merged PR <n>:'`, never `git log --merges`. Beware: `Select-String '<n>'` also matches unrelated `ENG-<n>` commits.
+- **Pipeline `BusPlannerUnified-backend-dev` (definition 246, `pipelines/backend-deploy-dev.yml`)** runs on every push to `dev` (`individualCI`). It calls `templates/backend-build-test.yml`: `dotnet build -c Release`, then `dotnet test` on `BusPlanner.Tests.Unit`. Its test runs hold the unit-test results per commit (for example build 81899, run 22369, for `dff1fbc7`). Read them with `harness/ado.ps1` (GET).
+- **A dev build stays `inProgress`** after "Build & test" succeeds, because the two "Deploy to dev (Canada/US)" stages wait at a manual gate. Judge tests by the stage and the test run, not the build status.
+- `azure-pipelines.yml` at the root is a starter that only echoes "hello" (trigger none).
+- **Running the unit tests locally:** `BusPlanner.Tests.Unit` targets `net8.0` and its test host needs both `Microsoft.NETCore.App 8.x` and `Microsoft.AspNetCore.App 8.x`. This machine has them in a user install at `%LOCALAPPDATA%\dotnet-qa` (SDK 10.0.404 + runtimes 8.0.34 and 10.0.15); put it first on PATH. Run `dotnet build-server shutdown` afterwards, or the build servers lock `dotnet.exe`.
+- **Forms engine condition library** (ENG-3306): `BusPlannerUnified/Modules/Forms/BusPlanner.Forms.Conditions`, `netstandard2.1`, no package dependencies, referenced by `BusPlannerAPI` as a `ProjectReference` (no NuGet package published). Tests: `BusPlanner.Tests.Unit/Forms/ConditionSharedCasesTests` (57 rows from `docs/forms-engine/tests/frm-condition-tests-draft-01.json`, read at run time; a copy under the test `bin` folder is read first) and `ConditionTests` (23). Python reference: `docs/forms-engine/tests/frm_condition_reference.py`. On 9 edge probes the two evaluators agree exactly.

@@ -50,7 +50,7 @@ $tests = Join-Path $tenant.Root 'tests'
 $utf8 = New-Object Text.UTF8Encoding $false
 $listFields = 'channels', 'roles', 'spec', 'data', 'tags'
 $statuses = 'draft', 'reviewed', 'approved', 'retired'
-$channelsAllowed = 'ui', 'api', 'sql', 'device'
+$channelsAllowed = 'ui', 'api', 'sql', 'device', 'cli'
 
 function Read-FrontMatter([string] $path) {
     $lines = [IO.File]::ReadAllLines($path, [Text.Encoding]::UTF8)
@@ -266,8 +266,8 @@ $($rows -join "`n")
             Evidence = $evidence
             Env = $runEnv
             Rehearsal = [bool]$Rehearsal
-            Sequential = @($picked | Where-Object { $_.Channels -contains 'ui' -or $_.Channels -contains 'device' } | ForEach-Object { $_.Path })
-            Parallel = @($picked | Where-Object { -not ($_.Channels -contains 'ui' -or $_.Channels -contains 'device') } | ForEach-Object { $_.Path })
+            Sequential = @($picked | Where-Object { $_.Channels -contains 'ui' -or $_.Channels -contains 'device' -or $_.Channels -contains 'cli' } | ForEach-Object { $_.Path })
+            Parallel = @($picked | Where-Object { -not ($_.Channels -contains 'ui' -or $_.Channels -contains 'device' -or $_.Channels -contains 'cli') } | ForEach-Object { $_.Path })
         }
         if ($Json) { $out | ConvertTo-Json -Depth 4 } else { $out | Format-List | Out-String -Width 220 }
     }

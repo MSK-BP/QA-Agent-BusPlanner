@@ -17,7 +17,7 @@ Run `$ARGUMENTS`.
 ## 2. Run
 - For each case, start one `case-runner` with: the case file path, the result file path (`<run folder>/<ID>.md`), the evidence folder, the environment, the data prefix, and whether it is a rehearsal.
 - `Parallel` cases: up to 4 runners at the same time.
-- `Sequential` cases: one at a time, because they share the browser or the device.
+- `Sequential` cases: one at a time, because they share the browser, the device or a build folder. Never run them in parallel to save time, even when they look independent: a `cli` case can read another case's temporary files in the shared build output.
 - If the environment is down (health check fails, sign-in page appears for every case), stop starting new cases, and mark the rest "Not run: environment" in RUN.md.
 
 ## 3. Verify

@@ -6,7 +6,7 @@ flow: F1                        # sub-folder; use "general" if there are no flow
 ticket:                         # tracker key, if the case comes from a ticket
 priority: P1                    # P1 | P2 | P3
 spec: []                        # requirement or acceptance-criteria IDs this case proves
-channels: [ui, sql]             # ui | api | sql | device: every channel an Expected line uses
+channels: [ui, sql]             # ui | api | sql | device | cli: every channel an Expected line uses
 roles: [role-name]              # who acts in the UI; one signed-in identity per role
 env: dev                        # lowest allowed environment where the case can run
 data: []                        # named test data it needs (see the tenant's tests/README.md)
