@@ -106,7 +106,7 @@ Plain requests route to the same skills as the slash commands.
 
 `.mcp.json` runs the Playwright MCP server (`@playwright/mcp`, pinned in `harness\setup-machine.ps1`) with `node.exe` directly from `%LOCALAPPDATA%\qa-agent\playwright-mcp`. It doesn't depend on `PATH` or `npx`, and `node_modules` stays out of the hub. Settings come from `.local\playwright.json`, which `use-tenant.ps1` builds: installed Chrome, headed, 1440x900, the tenant's blocked origins, and the tenant's run folder as the output folder.
 
-`.mcp.json` also adds Atlassian's remote MCP server (`https://mcp.atlassian.com/v1/mcp`) for Jira and Confluence. Each person signs in to it once with their own Atlassian account (`/mcp` in a session); nothing is stored in the hub. It is the same server as the claude.ai Atlassian connector, so either one works.
+`.mcp.json` also adds Atlassian's remote MCP server (`https://mcp.atlassian.com/v2/mcp`) for Jira and Confluence. Each person signs in to it once with their own Atlassian account (`/mcp` in a session); nothing is stored in the hub. It is the same server as the claude.ai Atlassian connector, so either one works.
 
 Each Claude session gets its own **isolated** browser, kept in memory. Sessions never lock each other out of a shared profile, so several sessions (and several testers) can run browser cases at the same time.
 
