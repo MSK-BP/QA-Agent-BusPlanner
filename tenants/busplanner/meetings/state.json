@@ -1,6 +1,174 @@
 {
-  "last_run": "2026-11-17T20:28:38Z",
+  "last_run": "2026-11-25T13:10:00Z",
   "meetings": {
+    "205163106": {
+      "status": "harvested",
+      "date": "2026-11-19",
+      "title": "Discipline Module Handoff",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-19-discipline-handoff-205163106.md",
+      "reason": null
+    },
+    "205156943": {
+      "status": "harvested",
+      "date": "2026-11-19",
+      "title": "GPS+ - Projects/Engineering Leadership Sync",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-19-gps-plus-leadership-sync-205156943.md",
+      "reason": null
+    },
+    "205123949": {
+      "status": "harvested",
+      "date": "2026-11-19",
+      "title": "New World Branching Strategy",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-19-new-world-branching-strategy-205123949.md",
+      "reason": null
+    },
+    "205099052": {
+      "status": "harvested",
+      "date": "2026-11-19",
+      "title": "QA Reported Bugs - Triaging",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-19-qa-bug-triage-205099052.md",
+      "reason": null
+    },
+    "205027556": {
+      "status": "harvested",
+      "date": "2026-11-19",
+      "title": "Discipline Planning",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-19-discipline-planning-205027556.md",
+      "reason": null
+    },
+    "204968938": {
+      "status": "harvested",
+      "date": "2026-11-19",
+      "title": "On-boarding",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-19-engineering-onboarding-204968938.md",
+      "reason": null
+    },
+    "204952466": {
+      "status": "harvested",
+      "date": "2026-11-19",
+      "title": "BusPlanner Unified Walkthrough",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-19-unified-walkthrough-ride-support-204952466.md",
+      "reason": null
+    },
+    "204907852": {
+      "status": "harvested",
+      "date": "2026-11-19",
+      "title": "Engineering Deep Dive",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-19-engineering-deep-dive-204907852.md",
+      "reason": null
+    },
+    "204885304": {
+      "status": "harvested",
+      "date": "2026-11-19",
+      "title": "BP ENG Stand Up",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-19-bp-eng-standup-204885304.md",
+      "reason": null
+    },
+    "205162703": {
+      "status": "skipped",
+      "date": "2026-11-19",
+      "title": "Discipline Module Handoff",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 205163106 (same meeting, another recorder)"
+    },
+    "205027680": {
+      "status": "skipped",
+      "date": "2026-11-19",
+      "title": "Discipline Planning",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 205027556 (same meeting, another recorder)"
+    },
+    "205027431": {
+      "status": "skipped",
+      "date": "2026-11-19",
+      "title": "Discipline Planning",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 205027556 (same meeting, another recorder)"
+    },
+    "205027079": {
+      "status": "skipped",
+      "date": "2026-11-19",
+      "title": "Discipline Planning",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 205027556 (same meeting, another recorder)"
+    },
+    "205026408": {
+      "status": "skipped",
+      "date": "2026-11-19",
+      "title": "Discipline Planning",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 205027556 (same meeting, another recorder)"
+    },
+    "204977863": {
+      "status": "skipped",
+      "date": "2026-11-19",
+      "title": "On-boarding",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 204968938 (same meeting, another recorder)"
+    },
+    "204914258": {
+      "status": "skipped",
+      "date": "2026-11-19",
+      "title": "Engineering Deep Dive",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 204907852 (same meeting, another recorder)"
+    },
+    "204904514": {
+      "status": "skipped",
+      "date": "2026-11-19",
+      "title": "Engineering Deep Dive",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 204907852 (same meeting, another recorder)"
+    },
+    "204904172": {
+      "status": "skipped",
+      "date": "2026-11-19",
+      "title": "Engineering Deep Dive",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 204907852 (same meeting, another recorder)"
+    },
+    "204600731": {
+      "status": "harvested",
+      "date": "2026-11-18",
+      "title": "STSYR <> BusPlanner - SaaS",
+      "class": "qa-context",
+      "notes": "notes/2026/2026-11-18-stsyr-saas-migration-204600731.md",
+      "reason": null
+    },
+    "204532051": {
+      "status": "harvested",
+      "date": "2026-11-18",
+      "title": "BP Pro - Run Creation",
+      "class": "qa-context",
+      "notes": "notes/2026/2026-11-18-bp-pro-run-creation-training-204532051.md",
+      "reason": null
+    },
+    "204431295": {
+      "status": "harvested",
+      "date": "2026-11-18",
+      "title": "Engineering Deep Dive",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-18-engineering-deep-dive-204431295.md",
+      "reason": null
+    },
     "203924420": {
       "status": "harvested",
       "date": "2026-11-17",
@@ -71,6 +239,438 @@
       "title": "Engineering Deep Dive",
       "class": "qa-core",
       "notes": "notes/2026/2026-11-11-engineering-deep-dive-202033054.md",
+      "reason": null
+    },
+    "205362569": {
+      "status": "harvested",
+      "date": "2026-11-20",
+      "title": "Engineering Deep Dive",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-20-engineering-deep-dive-205362569.md",
+      "reason": null
+    },
+    "205490343": {
+      "status": "harvested",
+      "date": "2026-11-20",
+      "title": "Discipline Module V1 Kickoff",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-20-discipline-v1-kickoff-205490343.md",
+      "reason": null
+    },
+    "205470421": {
+      "status": "harvested",
+      "date": "2026-11-20",
+      "title": "Support <> Engineering - Daily Huddle",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-20-support-engineering-huddle-205470421.md",
+      "reason": null
+    },
+    "205429665": {
+      "status": "harvested",
+      "date": "2026-11-20",
+      "title": "Engineering Show and Tell - Pre-Release Demo",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-20-engineering-show-and-tell-205429665.md",
+      "reason": null
+    },
+    "205348805": {
+      "status": "harvested",
+      "date": "2026-11-20",
+      "title": "BP ENG Stand Up",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-20-bp-eng-standup-205348805.md",
+      "reason": null
+    },
+    "205497664": {
+      "status": "harvested",
+      "date": "2026-11-20",
+      "title": "CalAmp vehicle substitutions - customer call",
+      "class": "qa-context",
+      "notes": "notes/2026/2026-11-20-calamp-substitutions-customer-call-205497664.md",
+      "reason": null
+    },
+    "205530038": {
+      "status": "harvested",
+      "date": "2026-11-20",
+      "title": "Ontario Ministry reports - customer issues",
+      "class": "qa-context",
+      "notes": "notes/2026/2026-11-20-ontario-ministry-reports-205530038.md",
+      "reason": null
+    },
+    "205363105": {
+      "status": "skipped",
+      "date": "2026-11-20",
+      "title": "Engineering Deep Dive",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 205362569 (same meeting, another recorder)"
+    },
+    "205361917": {
+      "status": "skipped",
+      "date": "2026-11-20",
+      "title": "Engineering Deep Dive",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 205362569 (same meeting, another recorder)"
+    },
+    "205357646": {
+      "status": "skipped",
+      "date": "2026-11-20",
+      "title": "Engineering Deep Dive",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 205362569 (same meeting, another recorder)"
+    },
+    "205357894": {
+      "status": "skipped",
+      "date": "2026-11-20",
+      "title": "Engineering Deep Dive",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 205362569 (same meeting, another recorder)"
+    },
+    "205357511": {
+      "status": "skipped",
+      "date": "2026-11-20",
+      "title": "Engineering Deep Dive",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 205362569 (same meeting, another recorder)"
+    },
+    "205492593": {
+      "status": "skipped",
+      "date": "2026-11-20",
+      "title": "Discipline Module V1 Kickoff",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 205490343 (same meeting, another recorder)"
+    },
+    "205487702": {
+      "status": "skipped",
+      "date": "2026-11-20",
+      "title": "Discipline Module V1 Kickoff",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 205490343 (same meeting, another recorder)"
+    },
+    "205484083": {
+      "status": "skipped",
+      "date": "2026-11-20",
+      "title": "Discipline Module V1 Kickoff",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 205490343 (same meeting, another recorder)"
+    },
+    "205431982": {
+      "status": "skipped",
+      "date": "2026-11-20",
+      "title": "Engineering Show and Tell - Pre-Release Demo",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 205429665 (same meeting, another recorder)"
+    },
+    "205871282": {
+      "status": "harvested",
+      "date": "2026-11-23",
+      "title": "Engineering Deep Dive",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-23-engineering-deep-dive-205871282.md",
+      "reason": null
+    },
+    "206045688": {
+      "status": "harvested",
+      "date": "2026-11-23",
+      "title": "Sprint Refinement",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-23-sprint-refinement-206045688.md",
+      "reason": null
+    },
+    "205950536": {
+      "status": "harvested",
+      "date": "2026-11-23",
+      "title": "Support <> Engineering - Daily Huddle",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-23-support-engineering-huddle-205950536.md",
+      "reason": null
+    },
+    "206125528": {
+      "status": "harvested",
+      "date": "2026-11-23",
+      "title": "New World Branching Strategy",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-23-new-world-branching-strategy-206125528.md",
+      "reason": null
+    },
+    "205847641": {
+      "status": "harvested",
+      "date": "2026-11-23",
+      "title": "BP ENG Stand Up",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-23-bp-eng-standup-205847641.md",
+      "reason": null
+    },
+    "206104652": {
+      "status": "harvested",
+      "date": "2026-11-23",
+      "title": "Release Process Working Session",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-23-release-process-working-session-206104652.md",
+      "reason": null
+    },
+    "206084465": {
+      "status": "harvested",
+      "date": "2026-11-23",
+      "title": "Server Procurement Process & Next Steps",
+      "class": "qa-context",
+      "notes": "notes/2026/2026-11-23-server-procurement-process-206084465.md",
+      "reason": null
+    },
+    "206034723": {
+      "status": "harvested",
+      "date": "2026-11-23",
+      "title": "Product Suite Knowledge Transfer",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-23-product-suite-knowledge-transfer-206034723.md",
+      "reason": null
+    },
+    "205888234": {
+      "status": "skipped",
+      "date": "2026-11-23",
+      "title": "Engineering Deep Dive",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 205871282 (same meeting, another recorder)"
+    },
+    "205875421": {
+      "status": "skipped",
+      "date": "2026-11-23",
+      "title": "Engineering Deep Dive",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 205871282 (same meeting, another recorder)"
+    },
+    "205872441": {
+      "status": "skipped",
+      "date": "2026-11-23",
+      "title": "Engineering Deep Dive",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 205871282 (same meeting, another recorder)"
+    },
+    "205871840": {
+      "status": "skipped",
+      "date": "2026-11-23",
+      "title": "Engineering Deep Dive",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 205871282 (same meeting, another recorder)"
+    },
+    "205865407": {
+      "status": "skipped",
+      "date": "2026-11-23",
+      "title": "Engineering Deep Dive",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 205871282 (same meeting, another recorder)"
+    },
+    "206043903": {
+      "status": "skipped",
+      "date": "2026-11-23",
+      "title": "Sprint Refinement",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 206045688 (same meeting, another recorder)"
+    },
+    "206098688": {
+      "status": "skipped",
+      "date": "2026-11-23",
+      "title": "Release Process Working Session",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 206104652 (same meeting, another recorder)"
+    },
+    "206034974": {
+      "status": "skipped",
+      "date": "2026-11-23",
+      "title": "Product Suite Knowledge Transfer",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 206034723 (same meeting, another recorder)"
+    },
+    "206344783": {
+      "status": "harvested",
+      "date": "2026-11-24",
+      "title": "Engineering Deep Dive",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-24-engineering-deep-dive-206344783.md",
+      "reason": null
+    },
+    "206344933": {
+      "status": "skipped",
+      "date": "2026-11-24",
+      "title": "Engineering Deep Dive",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 206344783 (same meeting, another recorder)"
+    },
+    "206344792": {
+      "status": "skipped",
+      "date": "2026-11-24",
+      "title": "Engineering Deep Dive",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 206344783 (same meeting, another recorder)"
+    },
+    "206344380": {
+      "status": "skipped",
+      "date": "2026-11-24",
+      "title": "Engineering Deep Dive",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 206344783 (same meeting, another recorder)"
+    },
+    "206342927": {
+      "status": "skipped",
+      "date": "2026-11-24",
+      "title": "Engineering Deep Dive",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 206344783 (same meeting, another recorder)"
+    },
+    "206341388": {
+      "status": "skipped",
+      "date": "2026-11-24",
+      "title": "Engineering Deep Dive",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 206344783 (same meeting, another recorder)"
+    },
+    "206398929": {
+      "status": "harvested",
+      "date": "2026-11-24",
+      "title": "Unified Canadian Prod Environment Scaling",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-24-unified-ca-prod-scaling-206398929.md",
+      "reason": null
+    },
+    "206319910": {
+      "status": "harvested",
+      "date": "2026-11-24",
+      "title": "BP ENG Stand Up",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-24-bp-eng-standup-206319910.md",
+      "reason": null
+    },
+    "206383252": {
+      "status": "harvested",
+      "date": "2026-11-24",
+      "title": "On-boarding",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-24-qa-onboarding-206383252.md",
+      "reason": null
+    },
+    "206385643": {
+      "status": "skipped",
+      "date": "2026-11-24",
+      "title": "On-boarding",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 206383252 (same meeting, another recorder)"
+    },
+    "206383662": {
+      "status": "skipped",
+      "date": "2026-11-24",
+      "title": "On-boarding",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 206383252 (same meeting, another recorder)"
+    },
+    "206555480": {
+      "status": "harvested",
+      "date": "2026-11-24",
+      "title": "Mobile App Product and Process Knowledge Transfer",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-24-mobile-app-knowledge-transfer-206555480.md",
+      "reason": null
+    },
+    "206564828": {
+      "status": "skipped",
+      "date": "2026-11-24",
+      "title": "Mobile App Product and Process Knowledge Transfer",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 206555480 (same meeting, another recorder)"
+    },
+    "206564110": {
+      "status": "skipped",
+      "date": "2026-11-24",
+      "title": "Mobile App Product and Process Knowledge Transfer",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 206555480 (same meeting, another recorder)"
+    },
+    "206563932": {
+      "status": "skipped",
+      "date": "2026-11-24",
+      "title": "Mobile App Product and Process Knowledge Transfer",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 206555480 (same meeting, another recorder)"
+    },
+    "206471711": {
+      "status": "harvested",
+      "date": "2026-11-24",
+      "title": "Product Backlog Grooming",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-24-product-backlog-grooming-206471711.md",
+      "reason": null
+    },
+    "206468689": {
+      "status": "skipped",
+      "date": "2026-11-24",
+      "title": "Product Backlog Grooming",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 206471711 (same meeting, another recorder)"
+    },
+    "206434224": {
+      "status": "harvested",
+      "date": "2026-11-24",
+      "title": "Support <> Engineering - Daily Huddle",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-24-support-engineering-huddle-206434224.md",
+      "reason": null
+    },
+    "206427972": {
+      "status": "skipped",
+      "date": "2026-11-24",
+      "title": "Support <> Engineering - Daily Huddle",
+      "class": "skip",
+      "notes": null,
+      "reason": "duplicate recording of 206434224 (same meeting, another recorder)"
+    },
+    "206431675": {
+      "status": "harvested",
+      "date": "2026-11-24",
+      "title": "Turns - Undo Student Scans & Driver Scan Card Login",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-24-turns-undo-scans-card-login-206431675.md",
+      "reason": null
+    },
+    "206584659": {
+      "status": "harvested",
+      "date": "2026-11-24",
+      "title": "GPS+ - Projects/Engineering Leadership Sync",
+      "class": "qa-core",
+      "notes": "notes/2026/2026-11-24-gps-plus-leadership-sync-206584659.md",
+      "reason": null
+    },
+    "206573694": {
+      "status": "harvested",
+      "date": "2026-11-24",
+      "title": "Image Backup Assistance",
+      "class": "qa-context",
+      "notes": "notes/2026/2026-11-24-image-backup-old-servers-206573694.md",
       "reason": null
     }
   }
