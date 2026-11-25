@@ -188,6 +188,42 @@ One global space plus 54 personal spaces (type = space search, 55 results).
 | Product / Engineering | PE | The only team space; 212 items: 106 titled "PRD ..." and 106 others (76 pages, 1 database, 29 folders). Full inventory in `confluence.md` section 1 |
 | Personal spaces | ~... | One per staff member, plus one named "BusPlanner Integrations". Reviewed 2026-11-10: 111 items, all default "Overview" pages, three template pages and one empty doc. Nothing about engineering or QA |
 
+### Where QA publishes in Confluence (rule from Sharaiz, 2026-11-25)
+
+All QA documentation goes under one folder: PE home > **QA Documentation** (folder `PE/folder/293666820`). Each QA activity gets its own subfolder, and that activity's pages go in it. Examples of activities: the test approach, sprint-wise QA documentation, onboarding and scaffolding, the plan to move to conventional automation, ETL testing. Do not put QA pages in other folders.
+
+| Subfolder | Folder id | Pages |
+|---|---|---|
+| Test Approach: Agentic Testing and Conventional Automation | 293502990 | Agentic Test Approach: Track 1 and Track 2 (PE/293699587, PDF attached) |
+| ETL Testing: BP Pro to BusPlanner Unified | 293797890 | ETL: Questions and Findings for the Dev Team (QA POC) (PE/293502993, native page so devs answer inline; source `reports/2026-11-25-etl-dev-questions.md`) |
+
+Publishing pattern (Sharaiz, 2026-11-25): put the **full document content** on the page as native Confluence content. Attach the PDF only as a file card at the end, under "Attachment". Never embed the PDF with the PDF viewer: readers do not want to scroll a PDF inside Confluence.
+
+A PDF is optional. From now on, write QA documents directly in Confluence, with no PDF. Attach a PDF only when one already exists and Sharaiz asks for it. A page without a PDF is complete: do not make a PDF for it and do not report the PDF as missing.
+
+#### Page design standard (Sharaiz, 2026-11-25)
+
+Goal: every QA page is beautiful, minimal and easy to use. A reader gets the point in five seconds and finds any item without scrolling through clutter. Apply this to every new or edited page in QA Documentation.
+
+| Part | Rule |
+|---|---|
+| Top of page | No table of contents macro and no list of anchor links. Readers rejected plain blue links at the top |
+| Hero | One custom panel (light blue `#DEEBFF`, one icon) with a one-sentence headline (H3) and one or two short lines on why the page exists |
+| Fact cards | Under the hero, a three-column layout of small grey (`#F4F5F7`) custom panels: status (as a lozenge), date, and the one thing the reader must know (for example "Answer first" or "First use") |
+| Sections | H2 headings, each with one emoji before the text. One emoji per section type; do not decorate H3 or body text |
+| Status | Use status lozenges, not words: green = yes, works, use now; blue = new, to build; yellow = open, in review, partial; red = no, blocked; neutral = later, counts |
+| Key points | Two-column layout of soft-coloured custom panels when a page has 2 to 4 headline points |
+| Call-outs | A custom panel for each instruction, rule or warning the reader must not miss ("How to answer", "Rehearse first"). Use one colour per meaning |
+| Questions to others | A purple (`#EAE6FF`) question panel under each item, so the ask stands out |
+| Long items | One expand per item (title "A1 · short title", plain text) when a section has many items. Reference data, examples and scope notes also go in expands |
+| Decisions | Native decision list (undecided or decided), not a table |
+| Tables | Short cells. First column as row headers where rows are attributes. Lozenges for status cells |
+| Attachments | Last section, "Attachment", with a file card only. Never the PDF viewer |
+| Emoji | Send each emoji with its shortname, its id (hex code point) and its Unicode character, and give each custom panel an icon id and icon text. Without the id, Confluence shows the shortname as text (for example ":railway_track:") |
+| Words | Keep the document text. Restyling changes layout only; check that no words are lost by comparing word counts before and after |
+
+Examples that follow the standard: PE/293699587 (agentic test approach) and PE/293502993 (ETL questions).
+
 Most useful PE pages:
 
 | Page | Link | Use |

@@ -1,6 +1,6 @@
 # Domain
 
-> Status: SOURCED 2026-11-10 from Confluence (space PE) and Jira (project ENG). Slack was not readable (see "Open questions"). Every fact carries a source. Anything marked UNVERIFIED is an inference, not a statement found in a source.
+> Status: SOURCED 2026-11-10 from Confluence (space PE) and Jira (project ENG). Slack was not readable until 2026-11-20 (see "Open questions"). Every fact carries a source. Anything marked UNVERIFIED is an inference, not a statement found in a source.
 >
 > Source shorthand: `PE/<id>` = `https://busplanner.atlassian.net/wiki/spaces/PE/pages/<id>`; `ENG-n` = `https://busplanner.atlassian.net/browse/ENG-n`.
 >
@@ -29,7 +29,7 @@ Two generations exist side by side. Sources call them **Old World** (the 13.x "B
 | Dispatch (New World Dispatch) | **Not shipped.** V1 is a draft proposal (v0.14, 2026-11-04) under engineering review; on the platform today Dispatch is a disabled "coming soon" tile. Jira has components "Wave 1..8" and a merge/split tool, which may be work in progress (PE/238157830, 238583811, 239304705) | Dispatchers | ENG components "BP Unified Dispatch - Wave 1..8"; Epic ENG-1625 |
 | Planned vs Actual (PvA) | Data layer + algorithm/validation | Internal / Dashboard | Epics ENG-351, ENG-352 |
 | Users and Access | User management PRD, final 2026-10-26 | District admins | PE/237043713 |
-| Discipline Module = Ride Support (code name `conduct`) | **Not started** (user, 2026-11-13): no product code exists. Core flows must be built and pass QA by **2026-12-18**. Spec: Confluence folder PE/238616600 "PRD · Ride Support"; V1 scope is "Ride Support V1" v0.7 of 2026-11-11 (PE/239108122, PE/241500162); test plan `reports/2026-11-14-testplan-ride-support-v1.md`. Reference behaviour: the connected prototype (`connected-prototype.html`, user's Work Docs folder, about 97 MB, one file, in-browser SQLite); not shipped, the spec wins. Walkthrough: `reports/2026-11-13-ride-support-prototype.md`. Digest: `confluence-prd.md` (grep "Ride Support", "Conduct_", "cnd:") | Drivers, monitors, transportation and school reviewers, families (letters only) | Jira product and v1 epics 847, 848, 849 in the PROD project (Backlog); PE/238616600 |
+| Discipline Module = Ride Support (code name `conduct`) | **Designed, not built** (2026-11-20): schema, decisions D1–D55, API v1 design and wave-1 stories exist; no product code yet. Built on a generic **Forms Engine** (`frm_` tables) with Ride Support tables (`cnd_`). Rules, scope, waves and Jira keys: section "Ride Support and the Forms Engine" below. Earlier status (user, 2026-11-13): not started. Core flows must be built and pass QA by **2026-12-18**. Spec: Confluence folder PE/238616600 "PRD · Ride Support"; V1 scope is "Ride Support V1" v0.7 of 2026-11-11 (PE/239108122, PE/241500162); test plan `reports/2026-11-14-testplan-ride-support-v1.md`. Reference behaviour: the connected prototype (`connected-prototype.html`, user's Work Docs folder, about 97 MB, one file, in-browser SQLite); not shipped, the spec wins. Walkthrough: `reports/2026-11-13-ride-support-prototype.md`. Digest: `confluence-prd.md` (grep "Ride Support", "Conduct_", "cnd:") | Drivers, monitors, transportation and school reviewers, families (letters only) | Jira product and v1 epics 847, 848, 849 in the PROD project (Backlog); PE/238616600 |
 
 BP Unified has its own repo and pipeline (`dev` / `staging` / `main`) and does not follow the Old World QA1/QA2 flow (PE/235175938).
 
@@ -293,6 +293,49 @@ More Live Viewer rules from the full read:
 | All GPS+ times display in the district's local time | PE/225050641 | UNKNOWN |
 | ETL Extract config takes the Windows time-zone id; the Load CronJob takes the IANA name; swapping them fails | PE/251756545 troubleshooting | UNKNOWN |
 
+### Ride Support and the Forms Engine (designed, not built)
+
+Source: Tommy Zwirblia's handoff, posted in Slack `#dev-unified-discipline` (private, C0CKYB5K28G) on 2026-11-20. "FE" below = the repo package `docs/forms-engine/`. It will go into `BusPlannerUnified` at `docs/forms-engine/`; until then a local copy is at `C:\Users\skhan\Repos\discipline-forms-engine\repo-package\repo-package\docs\forms-engine\` (outside the tenant). Owner Tommy Zwirblia; API and Turns coordination Drew Weeks. In FE, the SQL in `db/` wins over every document, and `decisions/decisions.md` holds D1–D55 with superseded ones kept.
+
+**Jira** (handoff doc): product PROD-847; features PROD-848 V1, PROD-993 V1.5, PROD-994 V2; epics ENG-3249..ENG-3305 (57); wave-1 stories ENG-3306..ENG-3318 (13, ready to start); labels `discipline`, `forms-engine`, `platform`, `turns`, `wave-1`..`wave-8`, `v1.5`, `v2`. Full key list: FE `planning/jira-keys.md`. UNVERIFIED: the earlier row cites PROD-849 as a v1 epic; the handoff does not name it.
+
+**Database** (FE README, handoff): install order on a database that already has Unified schema v7.21: `frm-forms-engine-draft-06.sql` (40 `frm_` tables + platform changes), `frm-discipline-domain-draft-02.sql` (11 `cnd_` tables), `frm-seed-discipline-draft-04.sql` (set `@customer_guid`; one transaction). Older databases upgrade through `db/deltas/`. Today only the HRCE test database has it (`HRCE_TommyZ` up to date, Slack 2026-11-20); **dev and QA do not**. The handoff names a combined `db/frm-install-fresh-draft-01.sql`, but it is not in the package (2026-11-20). Existing `ins_*` tables stay for now and are dropped later (O7, D1).
+
+**V1 scope** (FE `requirements/v1-scope.md`, set in Discipline Planning 2026-11-19):
+
+| In V1 | Not in V1 |
+|---|---|
+| Turns: Referrals button and screen (My Referrals, New Referral); start, save unfinished, finish, submit | Letters generated and sent by the system (V2; needs two-way Chipmunk messaging) |
+| Web: everything Turns does, plus review and decide | Any Chipmunk change, including one-way messaging |
+| Form types Problem (referral), Praise, Incident (as seeded, D34), Concern | Incident report for emergency services (feature #11) |
+| Review workflow: transportation, then school, as the customer sets it | Seating chart on the platform or tablet (V2; stays in BP Pro, D39) |
+| Family contact recorded by hand per guardian (checkbox + date, or "no letter needed"); this lets a referral close (D35) | Automated notifications (Slack 2026-11-19: email by hand until a notification service exists) |
+| Withdraw from Turns while unopened; once opened, approver with `cnd:referral:approve-withdraw` (D53, D54) | |
+| SIS CSV export, suspension log export (D38), reports (V1-5 open), service-day calendar (D40) | |
+| V1.5 lane, built alongside: form builder (D42), district edit screens for reasons, actions, letters (D43) | |
+
+**Build order** (FE `planning/build-order.md`): V1 = 182 stories in 8 waves. Wave 1 = forms work end to end, **API only, no screens**; QA tests through the API collection of story A3-6 (ENG-3318). Wave 2 ends with the **first slice**, the first thing QA can test end to end: a referral written on Turns reaches review. Concern (wave 6) comes after access and confidentiality (wave 3). Bus suspensions and the door alert are wave 7.
+
+**Test data** (FE story A1-2, ENG-3309): one idempotent script `db/test/frm-test-district.sql` loads the PRD's made-up test district (schools Oak Elementary, Pine Middle, Elm Center; buses 42, 51, 60, 64, 1951, 88; students with SIS IDs 100101–100108; users such as Lee, Pat, Transportation 1, Oak AP 1/2, Viewer 1) and a second customer "Other District" for isolation tests. It must refuse a database with a real customer. QA logins are kept out of the repository.
+
+**API v1** (FE `design/api-v1.md`): base `/api/frm`. Manifest, definition download (ETag = `definition_hash`, `304`), attachments URL, media reserve and complete, `PUT` draft, `POST` submit, my results, one result. Errors: `400` lists every error at once; `404` when the caller cannot see the object; `409` for stale `row_version` or a draft held by another editor. The customer comes from the token, never from the request.
+
+| Rule tests must protect | Source | Covered by |
+|---|---|---|
+| A published form version never changes; a draft keeps its version, and submit accepts it after a newer version is published | FE handoff, D47 | UNKNOWN |
+| An unanswered question never matches a condition | FE handoff, `design/condition-grammar.md` | UNKNOWN |
+| Every condition evaluator (.NET, TypeScript) passes the 57 shared cases in `tests/frm-condition-tests-draft-01.json`; `tests/frm_condition_reference.py` breaks ties | FE `design/api-v1.md`, handoff | UNKNOWN |
+| Confidential answers are left out of responses for callers without a grant, not masked | FE `design/api-v1.md` | UNKNOWN |
+| Saves are idempotent: a `client_revision` lower than or equal to the stored one returns `200` and changes nothing | FE `design/api-v1.md` call 6 | UNKNOWN |
+| Drafts may be partial; submit checks everything and returns every error at once; a failed submit writes nothing | FE `design/api-v1.md` calls 6–7 | UNKNOWN |
+| The server checks every workflow step | FE handoff | UNKNOWN |
+| The writer sees only `author_text`, never the internal status, queue or holder; a Concern always shows "Sent" | FE `design/api-v1.md` call 8 | UNKNOWN |
+| Concern goes only to concern contacts and school well-being contacts, never to transportation | FE `requirements/v1-scope.md`, handoff | UNKNOWN |
+| The manifest lists only form types the user may create, assigned to their scope and channel; DECISION never on the tablet | FE `design/api-v1.md` call 1 | UNKNOWN |
+| Turns sends no media in V1. Web media limits: photo 20 MB, file 25 MB, video 2 GB (resumable), up to `max_files` per answer | FE `design/api-v1.md`, D48–D50 | UNKNOWN |
+
+Open items that affect QA (FE `open-items.md`, 2026-11-20): O5 schema review with Drew and Mitchell, before A2/A3 code; V1-4 area name; V1-5 which reports; V1-8 translations; P1 Turns offline rider data; J1 who may amend after submit.
+
 ### Old World rules that show up repeatedly
 
 | Rule | Source | Covered by |
@@ -355,7 +398,7 @@ Signals added from Confluence (release notes, retro, RCA):
 | GPS+ early cap (ENG-2849) | developer proposal: 45 min | QA note: 30 min | not checked |
 | Chatbot needs a T&A permission? | ENG-1889: scoped users needed `ta:shift:read` | ENG-2925: chatbot must not require a T&A permission | not checked |
 
-1. **Slack was not usable.** The connected Slack account is a member of only `#all-busplanner` and `#social`; channel search and message search returned nothing for every query tried (eng, qa, release, dev, bug, date-only). The QA channels named in PE/235175938 (`#qa-env-updates`, `#qa-bppro`, `#qa-unified-gpsplus`, `#dev-general`, ...) could not be found or read. Nothing in this file comes from Slack.
+1. **Slack was not usable until 2026-11-20 (now fixed).** On 2026-11-20 the user reconnected the Slack connector to the main workspace; it now reaches 16 channels, including `#qa-env-updates`, `#qa-bpweb`, `#qa-fleet` and `#dev-unified-discipline`. Only the Ride Support section uses Slack so far. Before that, the connected Slack account is a member of only `#all-busplanner` and `#social`; channel search and message search returned nothing for every query tried (eng, qa, release, dev, bug, date-only). The QA channels named in PE/235175938 (`#qa-env-updates`, `#qa-bppro`, `#qa-unified-gpsplus`, `#dev-general`, ...) could not be found or read. Nothing in this file comes from Slack.
 2. **Where is BP Unified tested?** Partly answered. Three environments exist per country: dev ("ca-dev"), staging and prod (PE/157450256, PE/195297284, PE/9699329). The GPS+ user manual was written against "HRCE staging data" (PE/225050641), and the one written QA rule says "fix in dev, run a full regression in stage, then promote to prod" (PE/157450256). Still missing: the URLs of dev and staging, and which of them QA is expected to use day to day.
 3. **Acceptance criteria location.** There is no dedicated Jira field; they sit in the Description ("Acceptance criteria:" or "Done when") and, for New World features, in the PRD pages. Is that the intended convention?
 4. **Status names conflict.** PE/235175938 describes Ready for QA -> QA Review -> Approved for Release. Jira also has `Resolved`, `RELEASED`, and epic-only `In QA` / `QA Approved`. When `Resolved` is used instead of `Approved for Release` is not documented.

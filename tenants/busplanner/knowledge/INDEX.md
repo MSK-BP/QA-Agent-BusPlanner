@@ -4,7 +4,7 @@ Last built 2026-11-10. Code knowledge is from static reading of `BusPlannerUnifi
 
 | File | Covers | Status |
 |---|---|---|
-| domain.md | Products (Old World and New World), roles, glossary, business rules, bug themes | sourced from Confluence and Jira; Slack not readable |
+| domain.md | Products (Old World and New World), roles, glossary, business rules, bug themes; Ride Support / Forms Engine design, scope, waves and Jira keys | sourced from Confluence, Jira and Slack (Forms Engine handoff, 2026-11-20) |
 | process.md | Jira projects, QA workflow, release train, people, channels, Confluence pages | sourced from Confluence and Jira |
 | confluence.md | All 76 non-PRD Confluence pages: QA and release process, environments, runbooks, feature handoffs, people, answers to the hunt list | 2026-11-10; supersedes the process summary in process.md where they differ |
 | confluence-prd.md | All 87 "PRD" pages in Confluence: system map (SY/CX/IC ids), 318-term glossary, 626 shipped ("today") rules, 680 proposed rules, contradictions | 2026-11-10; about 2,850 lines, so Grep it for a module or term instead of reading it whole; "verified" there is the PRD author's tag, not a QA result |
@@ -23,6 +23,9 @@ Last built 2026-11-10. Code knowledge is from static reading of `BusPlannerUnifi
 | repos/BusPlannerUnified/ta-requirements.md | T&A PRD v1.9 requirements, calculations, state machines, spec-vs-code gaps | from the repo's Word docs, 2026-11-10 |
 | repos/BusPlannerUnified/chatbot-spec.md | Chatbot spec and backlog, stories, eval numbers, spec-vs-code gaps | from the repo's Word docs, 2026-11-10 |
 | repos/BusPlannerUnified/schema-and-etl-spec.md | Schema v7.22 tables, invariants, ETL spec and QA validation, data checks | from the repo's Word docs, 2026-11-10 |
+| repos/BusPlannerUnified/etl-mapping-sheet.md | Shikhar's column-level BP Pro -> Unified mapping (36 tables): testable rules, QA flags, differences from the ETL spec. Current ETL test oracle | from the sheet, 2026-11-24 |
+| repos/BusPlannerUnified/etl-mapping-sheet-full.md | Full text copy of the sheet (405 rows), for column-level checks | 2026-11-24 |
+| repos/BusPlannerUnified/etl-code-review.md | Sheet vs current Extract/Load code (dev 4fd03d48), run mechanics, tests and CI, 14 probable bugs, Old World facts, Slack context | 2026-11-24; supersedes data-services.md for ETL where they differ |
 | repos/BusPlannerUnified/platform-prd-and-ux.md | UI/UX decisions, design-system and a11y commitments, cross-cutting UI rules | from the repo's Word docs and meeting notes, 2026-11-10 |
 
 ## Meeting knowledge base (separate)
