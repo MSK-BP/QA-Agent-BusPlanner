@@ -13,18 +13,28 @@
 #
 #   CA staging
 #   ...
+#
+#   [qa1 bp-fleet]           any other system: a name in brackets, then
+#   URL: https://...         URL, Host, User, Email and Password lines.
+#   User: ...                harness\import-login-doc.ps1 writes these
+#   Password: ...            sections from a team login document.
 
 function Get-QaCreds {
     $root = Split-Path $PSScriptRoot -Parent
     $file = Get-ChildItem -Path $root -Filter '*Creds*.txt' -File | Select-Object -First 1
-    $result = @{ Pat = $env:AZURE_DEVOPS_PAT; Envs = @{} }
+    $result = @{ Pat = $env:AZURE_DEVOPS_PAT; Envs = @{}; Systems = @{} }
     if (-not $file) { return $result }
 
     $current = $null
     foreach ($line in Get-Content $file.FullName) {
         $t = $line.Trim()
         if (-not $t) { continue }
-        if ($t -match '^(URL|Email|Password|Clients)\s*[:=]\s*(.*)$') {
+        if ($t -match '^\[([^\]]+)\]$') {
+            $current = @{ Url = $null; Host = $null; User = $null; Email = $null; Password = $null; Clients = @() }
+            $result.Systems[$Matches[1].Trim().ToLower()] = $current
+            continue
+        }
+        if ($t -match '^(URL|Host|User|Email|Password|Clients)\s*[:=]\s*(.*)$') {
             if ($null -eq $current) { continue }
             $key = $Matches[1]; $val = $Matches[2].Trim()
             if ($key -eq 'Clients') {

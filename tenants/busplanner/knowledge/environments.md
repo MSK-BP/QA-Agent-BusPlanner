@@ -58,9 +58,10 @@ Rules:
 | QA2 (stage) | RDP server | `169.53.181.154` |
 | QA2 (stage) | BP Fleet (client 1230) | `1230fleetqa2.busplannerweb.com` |
 | QA2 (stage) | BP Quick (client 1230) | `1230quickqa2.busplannerweb.com` |
-| QA2 (stage) | BP Web | not given as a URL in the document |
+| QA2 (stage) | BP Web (client 1230) | `1230webqa2.busplannerweb.com` (from the document's hyperlink) |
 
 - RDP access to QA1 and QA2 is granted by Dan Sukhram.
+- **Logins imported 2026-11-26** into the local credentials file with `harness\import-login-doc.ps1` (run on the user's instruction; values never shown). Sections: `[rdp qa1]`, `[rdp qa2]`, `[qa1 bp-fleet|bp-web|bp-quick|bp-pro|bp-time-attendance|bp-gps]`, `[qa2 bp-fleet|bp-web|bp-quick]`, plus a `CA dev` block for `signin.ps1` (its `Clients:` line is empty until the user adds the dev client codes). Scripts read them with `(Get-QaCreds).Systems['qa1 bp-fleet']`.
 - The document also names a shared dev-team login for BP Unified dev (T&A and GPS+ on `bpu-dev-app`). That may cover the dev-account request to Shikhar Patel; confirm with the user before using a shared account.
 
 QA1 (built from `dev`) and QA2 (built from `stage`) exist per Confluence (`knowledge/process.md`). Found 2026-11-17 in `Managed/QA_Automation`: QA2 for client 1230 is `1230webqa2.busplannerweb.com` (Fleet). The Apps tests name beta hosts `<client>turnsbeta1.busplannerweb.com` and `<client>stsbhnbeta1.busplannerweb.com:9000` (`repos/Apps.md`). **None of these is approved yet.** TODO: QA1 hosts, the host pattern per client, and the user's approval before any test there.
