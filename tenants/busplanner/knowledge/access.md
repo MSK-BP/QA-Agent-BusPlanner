@@ -43,6 +43,16 @@ Raise these with the owners. Never copy the values.
 - Dev board sprints: two weeks. Active on 2026-11-25: **ENG Sprint 92** (id 175, 14 to 27 November, no goal set). Next: Sprint 93 (27 Nov to 11 Dec), 94 (11 to 25 Dec).
 - Sprint 92 on 2026-11-25: 527 issues including sub-tasks; 307 open issues excluding sub-tasks; **105 Ready for QA, 18 QA Review**. Most QA-waiting items are BP Unified (GPS+, chatbot, T&A, ETL, login flow). Refresh before relying on these numbers: `sprint in openSprints() AND project = ENG AND status in ("Ready for QA", "QA Review", "In QA")`.
 
+## Access owners (named by Andy Tompkins, Slack, 2026-11-26)
+
+| Need | Owner | Status 2026-11-26 |
+|---|---|---|
+| A5 Ride Support role accounts | wait until the roles exist | waiting |
+| Dev accounts for BP Unified (CA and US dev) | Shikhar Patel | DM drafted, not sent |
+| A2 Turns test APK, QA quick code, Turns branch with the conditions library (R10) | Stephen Hu or Emran Moradian | DM to Stephen drafted, not sent |
+| A4 Old World QA1 and QA2 hosts, test clients, logins | Yusra Abbasi | DM drafted, not sent |
+| Sentry (Turns crashes) and A6 Datadog, read-only | Mitchell Bland | DM drafted, not sent |
+
 ## What needs a team member
 
 | # | Need | Why | Ask |
