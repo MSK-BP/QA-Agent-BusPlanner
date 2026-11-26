@@ -48,10 +48,10 @@ Raise these with the owners. Never copy the values.
 | Need | Owner | Status 2026-11-26 |
 |---|---|---|
 | A5 Ride Support role accounts | wait until the roles exist | waiting |
-| Dev accounts for BP Unified (CA and US dev) | Shikhar Patel | DM drafted, not sent |
-| A2 Turns test APK, QA quick code, Turns branch with the conditions library (R10) | Stephen Hu or Emran Moradian | DM to Stephen drafted, not sent |
-| A4 Old World QA1 and QA2 hosts, test clients, logins | Yusra Abbasi | DM drafted, not sent |
-| Sentry (Turns crashes) and A6 Datadog, read-only | Mitchell Bland | DM drafted, not sent |
+| Dev accounts for BP Unified (CA and US dev) | Shikhar Patel | DM sent 2026-11-26, waiting for reply |
+| A2 Turns test APK, QA quick code, Turns branch with the conditions library (R10) | Stephen Hu or Emran Moradian | DM to Stephen sent 2026-11-26, waiting for reply |
+| A4 Old World QA1 and QA2 hosts, test clients, logins | Yusra Abbasi | DM sent 2026-11-26, waiting for reply |
+| Sentry (Turns crashes) and A6 Datadog, read-only | Mitchell Bland | DM sent 2026-11-26, waiting for reply |
 
 ## What needs a team member
 
