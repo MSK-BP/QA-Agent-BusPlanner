@@ -12,6 +12,10 @@
       "type": "http",
       "url": "https://mcp.atlassian.com/v2/mcp"
     },
+    "sentry": {
+      "type": "http",
+      "url": "https://mcp.sentry.dev/mcp"
+    },
     "pw-1": {
       "command": "C:\\Program Files\\nodejs\\node.exe",
       "args": [

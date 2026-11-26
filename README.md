@@ -18,7 +18,7 @@ QA Agent/                          core repository
 │  │  ├─ blocked-patterns.txt      generic patterns; each tenant adds its own
 │  │  └─ audit-log.ps1             logs every command to the tenant's run folder
 │  └─ settings.json                permissions and hook wiring
-├─ .mcp.json                       Playwright browser servers (one headed, eight headless)
+├─ .mcp.json                       Playwright browser servers (one headed, eight headless), Atlassian, Sentry
 ├─ harness/
 │  ├─ setup-machine.ps1            installs Git, Node, Playwright; runs the tenant's setup
 │  ├─ new-tenant.ps1               creates a tenant from the template
