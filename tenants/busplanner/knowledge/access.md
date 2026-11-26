@@ -45,14 +45,17 @@ Raise these with the owners. Never copy the values.
 
 ## Access owners (named by Andy Tompkins, Slack, 2026-11-26)
 
+New access requests go to the private Slack channel `#qa-access-requests` (Dan, Mitchell, Andy, Tommy and others are members), tagging the owner, not to separate DMs.
+
+
 | Need | Owner | Status 2026-11-26 |
 |---|---|---|
 | A5 Ride Support role accounts | wait until the roles exist | waiting |
 | Dev accounts for BP Unified (CA and US dev) | Shikhar Patel | DM sent 2026-11-26, waiting for reply |
 | A2 Turns test APK, QA quick code, Turns branch with the conditions library (R10) | Stephen Hu or Emran Moradian | DM to Stephen sent 2026-11-26, waiting for reply |
-| A4 Old World QA1 and QA2 hosts, test clients, logins | Yusra Abbasi | Hosts and logins received 2026-11-26 (hosts in `environments.md`, logins imported into the credentials file). Still open with Yusra: which clients are safe to change and what not to touch. Still open with the user: approval of QA1 and QA2 |
-| BPInfo access (QA1, QA2) and RDP to QA1/QA2 | Dan Sukhram (Yusra: BPInfo access comes from Drew, Shikhar or Dan) | DM to Dan drafted 2026-11-26 |
-| Sentry (Turns crashes) and A6 Datadog, read-only | Mitchell Bland | Invites to Sentry and Datadog sent 2026-11-26 20:18 PKT; the user accepts them |
+| A4 Old World QA1 and QA2 hosts, test clients, logins | Yusra Abbasi | Hosts and logins received 2026-11-26 (hosts in `environments.md`, logins imported into the credentials file). **Done.** The user confirmed 2026-11-26 that the test clients there (1230, 1221) are safe to change; no do-not-touch list needed |
+| BPInfo access (QA1, QA2), RDP to QA1/QA2, and which BPInfo BP Unified dev/staging call | Dan Sukhram or Shikhar Patel (Yusra: BPInfo access comes from Drew, Shikhar or Dan) | Request drafted in `#qa-access-requests` 2026-11-26, tagging Dan and Shikhar |
+| Sentry (Turns crashes) and A6 Datadog, read-only | Mitchell Bland | Sentry connected 2026-11-26. Datadog: Mitchell is adding MCP access (org setting) and the `mcp_read` permission (custom role cloned from Read Only) |
 
 ## What needs a team member
 

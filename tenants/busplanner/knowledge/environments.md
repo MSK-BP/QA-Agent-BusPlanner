@@ -47,7 +47,7 @@ Rules:
 
 ## Old World (BusPlanner Main, Fleet)
 
-**Hosts from a team login document (`WebsiteDetails.docx`, shared by Yusra Abbasi, seen 2026-11-26). Hosts only: the logins stay out of this hub. NOT approved for testing yet; the user approves each environment before any test.**
+**Hosts from a team login document (`WebsiteDetails.docx`, shared by Yusra Abbasi, seen 2026-11-26). Hosts only: the logins stay out of this hub. Allowed for testing (user, 2026-11-26: "These test clients are safe to change anything, and it's not a problem"): the test clients 1230 and 1221 on QA1 and QA2. BPInfo writes still follow hard rule 1 until Dan or Shikhar confirms which BPInfo these environments use.**
 
 | Environment | Item | Host |
 |---|---|---|
