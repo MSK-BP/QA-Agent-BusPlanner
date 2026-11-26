@@ -74,6 +74,12 @@ Turns (and the other MAUI apps) are tested on Android emulators on the tester's 
 - Turns supports Android 8 (API 26) and up (`SupportedOSPlatformVersion` 26.0). The API 30 tablet covers older OS versions; add an API 26 image if a client runs Android 8 or 9.
 - **Still missing for device cases:** a Turns test APK and a QA quick code or client code (access A2), and an approved Old World server (QA1/QA2, access A4), because Turns talks to BPInfo.
 
+## Datadog and Sentry (2026-11-26)
+
+- **Datadog site: US1, `datadoghq.com`** (from CA staging `config.json`, `dd.site`). The web app is `app.datadoghq.com`. CA staging sends browser RUM data (service `busplanner-frontend`, env `staging-ca`); US staging has an empty `dd` block, so it sends none and logs the console error "Application ID is not configured".
+- Access: read-only invites from Mitchell Bland (2026-11-26) for Datadog and Sentry. The Datadog connector for Claude failed with "missing permissions" on US1: the read-only role probably lacks the permission the Datadog MCP server needs, or the org has not enabled it. Asked Mitchell. Fallback: a read-only application key used through a local helper.
+- Sentry: remote MCP server `sentry` in `.mcp.json` (`https://mcp.sentry.dev/mcp`); the user signs in once with `/mcp`.
+
 ## Hard rules for non-production environments
 
 These come from what the repo shows, and are not optional:
