@@ -47,6 +47,22 @@ Rules:
 
 ## Old World (BusPlanner Main, Fleet)
 
+**Hosts from a team login document (`WebsiteDetails.docx`, shared by Yusra Abbasi, seen 2026-11-26). Hosts only: the logins stay out of this hub. NOT approved for testing yet; the user approves each environment before any test.**
+
+| Environment | Item | Host |
+|---|---|---|
+| QA1 (dev) | RDP server (BP Pro desktop) | `qa1.busplanner.com` |
+| QA1 (dev) | BP Fleet (Miami client 1230) | `1230fleetqa1.busplannerweb.com` |
+| QA1 (dev) | BP Web (client 1221) | `1221webqa1.busplannerweb.com` |
+| QA1 (dev) | BP Quick (client 1221) | `1221quickqa1.busplannerweb.com` |
+| QA2 (stage) | RDP server | `169.53.181.154` |
+| QA2 (stage) | BP Fleet (client 1230) | `1230fleetqa2.busplannerweb.com` |
+| QA2 (stage) | BP Quick (client 1230) | `1230quickqa2.busplannerweb.com` |
+| QA2 (stage) | BP Web | not given as a URL in the document |
+
+- RDP access to QA1 and QA2 is granted by Dan Sukhram.
+- The document also names a shared dev-team login for BP Unified dev (T&A and GPS+ on `bpu-dev-app`). That may cover the dev-account request to Shikhar Patel; confirm with the user before using a shared account.
+
 QA1 (built from `dev`) and QA2 (built from `stage`) exist per Confluence (`knowledge/process.md`). Found 2026-11-17 in `Managed/QA_Automation`: QA2 for client 1230 is `1230webqa2.busplannerweb.com` (Fleet). The Apps tests name beta hosts `<client>turnsbeta1.busplannerweb.com` and `<client>stsbhnbeta1.busplannerweb.com:9000` (`repos/Apps.md`). **None of these is approved yet.** TODO: QA1 hosts, the host pattern per client, and the user's approval before any test there.
 
 ## Mobile devices: Android emulators and Appium (set up 2026-11-26)
@@ -78,7 +94,7 @@ Turns (and the other MAUI apps) are tested on Android emulators on the tester's 
 
 - **Datadog site: US1, `datadoghq.com`** (from CA staging `config.json`, `dd.site`). The web app is `app.datadoghq.com`. CA staging sends browser RUM data (service `busplanner-frontend`, env `staging-ca`); US staging has an empty `dd` block, so it sends none and logs the console error "Application ID is not configured".
 - Access: read-only invites from Mitchell Bland (2026-11-26) for Datadog and Sentry. The Datadog connector for Claude failed with "missing permissions" on US1: the read-only role probably lacks the permission the Datadog MCP server needs, or the org has not enabled it. Asked Mitchell. Fallback: a read-only application key used through a local helper.
-- Sentry: remote MCP server `sentry` in `.mcp.json` (`https://mcp.sentry.dev/mcp`); the user signs in once with `/mcp`.
+- **Sentry: connected 2026-11-26** through the remote MCP server `sentry` (`https://mcp.sentry.dev/mcp`, the user signed in with `/mcp`). Organization `busplanner-inc`, region `https://us.sentry.io`, projects `turns`, `chipmunk`, `delays` (the three mobile apps). Read-only use: search issues, events and stack traces for triage. Sentry holds production crash reports, so hard rule 5 applies to anything read there: never copy rider, driver or employee details into reports.
 
 ## Hard rules for non-production environments
 

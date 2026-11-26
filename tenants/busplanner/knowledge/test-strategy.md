@@ -86,3 +86,16 @@ Decided 2026-11-17 (testers and engineering manager to confirm): two tracks. Tra
 - Every verdict is checked by an independent verifier agent against the evidence.
 - Developers keep writing their own unit and component tests in BusPlannerUnified.
 - Track 2: when Track 1 is stable, stable cases are converted into code for the BP Unified framework.
+
+## Existing manual regression list (seen 2026-11-26)
+
+`MASTER REGRESSION TESTING LIST.xlsx` (team spreadsheet, from the user's Downloads; owner to confirm) holds the manual regression checks the team runs per release:
+
+| Sheet | Checks | Shape | Use for the QA Agent |
+|---|---|---|---|
+| Turns | 138 checks, 19 sections (set-up, inspections, T&A clock, navigation, ridership and scans, settings, permissions, device layout, app lifecycle, localization, offline) | Action and expected result per row; no priorities filled | Seed for `device` cases on the emulators; the Ride Support cases add to the ridership and offline sections |
+| Chipmunk | 108 checks, 17 sections | Same | Seed for parent-app device cases |
+| Delays | 92 checks, 12 sections | Same; some rows note known ENG bugs | Seed for Delays device cases |
+| BP Pro, BP Web, BP Quick, BP Fleet | 29, 21, 22, 14 rows | Pass or fail per release version (12.x to 13.3), notes and linked bugs | Old World regression scope and history, for QA1 and QA2 once approved |
+
+Minimum OS versions from the sheet: Turns iOS 13 and Android 8; Chipmunk and Delays iOS 13 and Android 5. The emulators cover Android 11 and 16 only, so add an older image if those minimums must be tested.

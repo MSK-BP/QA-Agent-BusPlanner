@@ -50,7 +50,7 @@ Raise these with the owners. Never copy the values.
 | A5 Ride Support role accounts | wait until the roles exist | waiting |
 | Dev accounts for BP Unified (CA and US dev) | Shikhar Patel | DM sent 2026-11-26, waiting for reply |
 | A2 Turns test APK, QA quick code, Turns branch with the conditions library (R10) | Stephen Hu or Emran Moradian | DM to Stephen sent 2026-11-26, waiting for reply |
-| A4 Old World QA1 and QA2 hosts, test clients, logins | Yusra Abbasi | DM sent 2026-11-26, waiting for reply |
+| A4 Old World QA1 and QA2 hosts, test clients, logins | Yusra Abbasi | Hosts and logins shared in a document 2026-11-26 (hosts in `environments.md`; logins belong in the credentials file). Still needed: the user's approval of QA1/QA2, and a safe test client |
 | Sentry (Turns crashes) and A6 Datadog, read-only | Mitchell Bland | Invites to Sentry and Datadog sent 2026-11-26 20:18 PKT; the user accepts them |
 
 ## What needs a team member
