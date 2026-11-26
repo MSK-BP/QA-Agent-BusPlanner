@@ -11,6 +11,70 @@
     "atlassian": {
       "type": "http",
       "url": "https://mcp.atlassian.com/v2/mcp"
+    },
+    "pw-1": {
+      "command": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "${LOCALAPPDATA}\\qa-agent\\playwright-mcp\\node_modules\\@playwright\\mcp\\cli.js",
+        "--config",
+        ".local/playwright-pool.json"
+      ]
+    },
+    "pw-2": {
+      "command": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "${LOCALAPPDATA}\\qa-agent\\playwright-mcp\\node_modules\\@playwright\\mcp\\cli.js",
+        "--config",
+        ".local/playwright-pool.json"
+      ]
+    },
+    "pw-3": {
+      "command": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "${LOCALAPPDATA}\\qa-agent\\playwright-mcp\\node_modules\\@playwright\\mcp\\cli.js",
+        "--config",
+        ".local/playwright-pool.json"
+      ]
+    },
+    "pw-4": {
+      "command": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "${LOCALAPPDATA}\\qa-agent\\playwright-mcp\\node_modules\\@playwright\\mcp\\cli.js",
+        "--config",
+        ".local/playwright-pool.json"
+      ]
+    },
+    "pw-5": {
+      "command": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "${LOCALAPPDATA}\\qa-agent\\playwright-mcp\\node_modules\\@playwright\\mcp\\cli.js",
+        "--config",
+        ".local/playwright-pool.json"
+      ]
+    },
+    "pw-6": {
+      "command": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "${LOCALAPPDATA}\\qa-agent\\playwright-mcp\\node_modules\\@playwright\\mcp\\cli.js",
+        "--config",
+        ".local/playwright-pool.json"
+      ]
+    },
+    "pw-7": {
+      "command": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "${LOCALAPPDATA}\\qa-agent\\playwright-mcp\\node_modules\\@playwright\\mcp\\cli.js",
+        "--config",
+        ".local/playwright-pool.json"
+      ]
+    },
+    "pw-8": {
+      "command": "C:\\Program Files\\nodejs\\node.exe",
+      "args": [
+        "${LOCALAPPDATA}\\qa-agent\\playwright-mcp\\node_modules\\@playwright\\mcp\\cli.js",
+        "--config",
+        ".local/playwright-pool.json"
+      ]
     }
   }
 }

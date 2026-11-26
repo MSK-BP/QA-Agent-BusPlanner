@@ -1,0 +1,14 @@
+{
+  "maxParallel": 15,
+  "maxParallelByEnv": {
+    "us-staging": 8,
+    "ca-staging": 8,
+    "us-dev": 8,
+    "ca-dev": 8
+  },
+  "pools": {
+    "browser": ["pw-1", "pw-2", "pw-3", "pw-4", "pw-5", "pw-6", "pw-7", "pw-8"],
+    "device": ["QA-Phone-Pixel8-API36", "QA-Tablet-PixelTablet-API36", "QA-Tablet-10in-API30"]
+  },
+  "limits": {}
+}

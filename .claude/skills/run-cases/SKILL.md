@@ -9,13 +9,13 @@ Run `$ARGUMENTS`.
 ## 1. Prepare
 1. Read `<tenant>/knowledge/environments.md` (hard rules included) and `<tenant>/tests/README.md`. Pick the environment: the one given, else the suite's `env`, else the cases' lowest `env`. It must be allowed. Refuse production.
 2. Run `harness\cases.ps1 -Action validate`. Stop on errors in the selected cases.
-3. Create the run: `harness\cases.ps1 -Action new-run <selector> -Env <env> -Json` (add `-MaxParallel <n>` if the user asks for more or fewer cases at once; default 4). Add `-Rehearsal` only if the user said "rehearsal": then unapproved cases run too, and nothing counts for sign-off. The JSON gives the run folder, the evidence folder, `Waves` (each case with its in-run `DependsOn` and its `Resources`) and `ExternalDependencies` (cases outside the run that a selected case needs, with their last verdict). If an external dependency's last verdict is not Pass, tell the user; unless they say to go on, the cases that need it are Blocked.
+3. Create the run: `harness\cases.ps1 -Action new-run <selector> -Env <env> -Json`. The limit of cases at once comes from the tenant's `tests/parallel.json` (overall and per environment; 4 without the file). Add `-MaxParallel <n>` only if the user asks for a different number. Add `-Rehearsal` only if the user said "rehearsal": then unapproved cases run too, and nothing counts for sign-off. The JSON gives the run folder, the evidence folder, `Waves` (each case with its in-run `DependsOn` and its `Resources`) and `ExternalDependencies` (cases outside the run that a selected case needs, with their last verdict). If an external dependency's last verdict is not Pass, tell the user; unless they say to go on, the cases that need it are Blocked.
 4. Get the data prefix: `QA-AUTO-<tester initials>-`. Ask once if you do not know the tester's initials.
 5. If the run has ui cases: make sure each environment and role it needs has a fresh saved sign-in in `<run folder>\auth\<env>-<role>.json`. If the tenant's tests README names a scripted sign-in helper, run it for each one (it signs in through the API on non-production environments; you never see the credentials). Otherwise ask the tester to run `harness\save-signin.ps1` and sign in.
 6. Record the build under test in RUN.md (`build:`), from the app's `config.json`, a health or version endpoint, or the deployed commit.
 
 ## 2. Run
-For each case, start one `case-runner` with: the case file path, the result file path (`<run folder>/<ID>.md`), the evidence folder, the environment, the data prefix, whether it is a rehearsal, and the other cases running at the same time.
+For each case, start one `case-runner` with: the case file path, the result file path (`<run folder>/<ID>.md`), the evidence folder, the environment, the data prefix, whether it is a rehearsal, the other cases running at the same time, and its assigned `Resources` from the plan (for example `browser:pw-3`, `device:<emulator>`). A runner uses only the browser and device it was given.
 
 Follow the plan in `Waves`:
 - **Start every case of a wave at the same time:** one `case-runner` each, all in one message.
@@ -23,7 +23,7 @@ Follow the plan in `Waves`:
 - **Start early when safe:** a case of a later wave may start before its wave as soon as every case in its `DependsOn` has a verified Pass and none of its `Resources` is held by a running case. Keep the total at or under `MaxParallel`.
 - **Dependency not passed:** a case whose dependency is Fail, Blocked or Inconclusive does not run. Record "Not run: dependency <ID> <verdict>" in RUN.md and in its result (verdict Blocked).
 - **Never run together what the plan keeps apart.** The plan already knows the declared and default resources. If you find a shared thing the cases do not declare (a folder, a record, an account), stop, propose `resources` for those cases (a person approves the change), and plan again.
-- **Browser:** all runners in one Claude session share one Playwright browser, so `browser:session` cases never overlap in one session. To run ui cases in parallel, give each group to its own Claude session with its own browser.
+- **Browser:** with a browser pool in the tenant's `tests/parallel.json` (`pw-1` ... `pw-8`, headless, one isolated browser each), the plan gives every ui case its own pool browser, so ui cases run in parallel. Without a pool, all ui cases share the session browser (`browser:session`) and run one at a time. Before the wave starts, refresh the sign-ins it needs; every pool browser loads the same saved sign-in file with its own `browser_set_storage_state`.
 - If the environment is down (health check fails, sign-in page appears for every case), stop starting new cases, and mark the rest "Not run: environment" in RUN.md.
 
 ## 3. Verify

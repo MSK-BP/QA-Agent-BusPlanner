@@ -17,9 +17,10 @@
   -Action new-run   Creates a run folder for the selected cases and prints it. Only
                     approved cases, unless -Rehearsal (then draft and reviewed too).
                     Plans the run in waves: the cases of one wave can run at the same
-                    time (at most -MaxParallel, default 4). A case goes in a wave only
-                    after every case it 'depends-on' is in an earlier wave, and never
-                    with a case that holds the same resource.
+                    time (at most -MaxParallel). A case goes in a wave only after every
+                    case it 'depends-on' is in an earlier wave, and never with a case
+                    that holds the same resource. Pool slots (a browser, a device) are
+                    assigned by name, so each runner knows which one to use.
   -Action matrix    Writes tests/MATRIX.md and tests/cases.csv from the cases and
                     the latest result of each.
 
@@ -33,8 +34,17 @@
                                (device) means "any of that kind" and conflicts with
                                every device:<name>. 'exclusive' runs the case alone
                                (timing and load cases).
-  Without 'resources', the channels give a safe default: ui -> browser:session,
+  Without 'resources', the channels give a safe default: ui -> browser,
   device -> device, cli -> build. api and sql cases hold nothing by default.
+
+  Optional tenant file tests/parallel.json:
+    { "maxParallel": 15,                       overall limit (default 4)
+      "maxParallelByEnv": { "us-staging": 8 }, lower limit per environment
+      "pools": { "browser": ["pw-1", "pw-2"],  a bare kind takes a free slot
+                 "device":  ["Tablet-A"] },    from its pool, named kind:slot
+      "limits": { "device": 2 } }              cap per kind (default: pool size)
+  Without a browser pool, every ui case shares one browser (browser:session).
+  A bare kind without a pool (build, data) clashes with every item of its kind.
 
 .EXAMPLE
   .\harness\cases.ps1 -Action validate
@@ -54,7 +64,7 @@ param(
     [string[]] $Id,
     [string] $Env,
     [switch] $Rehearsal,
-    [ValidateRange(1, 16)] [int] $MaxParallel = 4,
+    [ValidateRange(0, 32)] [int] $MaxParallel = 0,
     [switch] $Json
 )
 
@@ -125,28 +135,56 @@ function Get-Cases {
     }
 }
 
+function Get-ParallelConfig {
+    $cfg = [ordered]@{ MaxParallel = 4; ByEnv = @{}; Pools = @{ browser = @('session') }; Limits = @{} }
+    $f = Join-Path $tests 'parallel.json'
+    if (Test-Path $f) {
+        $j = Get-Content $f -Raw | ConvertFrom-Json
+        if ($j.maxParallel) { $cfg.MaxParallel = [int]$j.maxParallel }
+        if ($j.maxParallelByEnv) { $j.maxParallelByEnv.PSObject.Properties | ForEach-Object { $cfg.ByEnv[$_.Name.ToLower()] = [int]$_.Value } }
+        if ($j.pools) { $j.pools.PSObject.Properties | ForEach-Object { $cfg.Pools[$_.Name.ToLower()] = @($_.Value) } }
+        if ($j.limits) { $j.limits.PSObject.Properties | ForEach-Object { $cfg.Limits[$_.Name.ToLower()] = [int]$_.Value } }
+    }
+    $cfg
+}
+
 function Get-Resources($c) {
     # Declared resources, plus a safe default per channel when that kind is not declared.
     $res = @($c.DeclaredResources)
     $kinds = @($res | ForEach-Object { ($_ -split ':')[0] })
-    if ($c.Channels -contains 'ui' -and $kinds -notcontains 'browser') { $res += 'browser:session' }
+    if ($c.Channels -contains 'ui' -and $kinds -notcontains 'browser') { $res += 'browser' }
     if ($c.Channels -contains 'device' -and $kinds -notcontains 'device') { $res += 'device' }
     if ($c.Channels -contains 'cli' -and $kinds -notcontains 'build') { $res += 'build' }
     @($res | Select-Object -Unique)
 }
 
-function Test-ResourceClash([string[]] $a, [string[]] $b) {
-    foreach ($x in $a) {
-        foreach ($y in $b) {
-            if ($x -ieq $y) { return $true }
-            $kx = ($x -split ':')[0]; $ky = ($y -split ':')[0]
-            if ($kx -ieq $ky -and (($x -notmatch ':') -or ($y -notmatch ':'))) { return $true }
+function Get-Assignment($c, [string[]] $held, $cfg) {
+    # Concrete items for this case next to the held ones, or $null if it cannot join.
+    $out = @()
+    foreach ($r in (Get-Resources $c)) {
+        if ($r -eq 'exclusive') { $out += $r; continue }
+        $kind = ($r -split ':')[0].ToLower()
+        $pool = $cfg.Pools[$kind]
+        $taken = @($held + $out | Where-Object { ($_ -split ':')[0] -ieq $kind })
+        $cap = if ($cfg.Limits.ContainsKey($kind)) { $cfg.Limits[$kind] } elseif ($pool) { @($pool).Count } else { [int]::MaxValue }
+        if ($taken.Count -ge $cap) { return $null }
+        if ($taken -contains $kind) { return $null }                     # a bare non-pool item is held: whole kind busy
+        if ($r -match ':') {
+            if ($taken -contains $r) { return $null }
+            $out += $r
+        } elseif ($pool) {
+            $free = @($pool | Where-Object { $taken -notcontains "${kind}:$_" } | Select-Object -First 1)
+            if (-not $free) { return $null }
+            $out += "${kind}:$($free[0])"
+        } else {
+            if ($taken.Count) { return $null }                           # bare non-pool kind clashes with every item
+            $out += $kind
         }
     }
-    $false
+    ,@($out)
 }
 
-function Get-Waves($picked, [int] $max) {
+function Get-Waves($picked, [int] $max, $cfg) {
     $inRun = @{}; foreach ($c in $picked) { $inRun[$c.Id.ToLower()] = $c }
     $remaining = New-Object Collections.Generic.List[object]; $picked | ForEach-Object { $remaining.Add($_) }
     $done = @{}; $waves = @(); $n = 0
@@ -156,12 +194,19 @@ function Get-Waves($picked, [int] $max) {
             -not ($c.DependsOn | Where-Object { $inRun.ContainsKey($_.ToLower()) -and -not $done.ContainsKey($_.ToLower()) })
         })
         if (-not $ready) { throw "Cannot plan: circular depends-on among $(($remaining | ForEach-Object { $_.Id }) -join ', ')." }
-        $wave = @(); $held = @()
+        $wave = @(); $held = @(); $assigned = @{}
         foreach ($c in $ready) {
             if ($wave.Count -ge $max) { break }
-            $r = Get-Resources $c
-            if ($wave.Count -and (($r -contains 'exclusive') -or ($held -contains 'exclusive') -or (Test-ResourceClash $r $held))) { continue }
-            $wave += $c; $held += $r
+            if ($held -contains 'exclusive') { break }
+            $a = Get-Assignment $c $held $cfg
+            if ($null -eq $a) { continue }
+            if ($wave.Count -and ($a -contains 'exclusive')) { continue }
+            $wave += $c; $held += $a; $assigned[$c.Id] = $a
+        }
+        if (-not $wave) {
+            $c = $ready[0]; $a = Get-Assignment $c @() $cfg
+            if ($null -eq $a) { throw "Cannot plan $($c.Id): its resources exceed the pools or limits in tests/parallel.json." }
+            $wave = @($c); $assigned[$c.Id] = $a
         }
         $n++
         foreach ($c in $wave) { $done[$c.Id.ToLower()] = $n; [void]$remaining.Remove($c) }
@@ -171,7 +216,7 @@ function Get-Waves($picked, [int] $max) {
                 [pscustomobject]@{
                     Id = $_.Id; Path = $_.Path
                     DependsOn = @($_.DependsOn | Where-Object { $inRun.ContainsKey($_.ToLower()) })
-                    Resources = @(Get-Resources $_)
+                    Resources = @($assigned[$_.Id])
                 }
             })
         }
@@ -309,7 +354,9 @@ switch ($Action) {
         $statusFilter = if ($Rehearsal) { 'draft,reviewed,approved' } else { 'approved' }
         $picked = @(Select-Cases $cases $sel.Filters $sel.Ids $statusFilter | Sort-Object Priority, Module, Flow, Id)
         if (-not $picked) { throw "No $statusFilter cases match. Approved cases only, unless -Rehearsal." }
-        $waves = @(Get-Waves $picked $MaxParallel)
+        $pcfg = Get-ParallelConfig
+        $limit = if ($MaxParallel) { $MaxParallel } elseif ($pcfg.ByEnv.ContainsKey($runEnv.ToLower())) { [Math]::Min($pcfg.ByEnv[$runEnv.ToLower()], $pcfg.MaxParallel) } else { $pcfg.MaxParallel }
+        $waves = @(Get-Waves $picked $limit $pcfg)
         $order = @($waves | ForEach-Object { $_.Cases } | ForEach-Object { $_.Id })
         $picked = @($order | ForEach-Object { $i = $_; $picked | Where-Object { $_.Id -eq $i } })
         $external = @($picked | ForEach-Object {
@@ -356,7 +403,7 @@ $mode Evidence (screenshots, network logs) is outside git, in ``$evidence``.
 
 ## Plan
 
-$($waves.Count) wave(s), at most $MaxParallel case(s) at the same time. A wave's cases run together; a case starts only when the cases it depends on have passed.$extText
+$($waves.Count) wave(s), at most $limit case(s) at the same time. A wave's cases run together; a case starts only when the cases it depends on have passed.$extText
 
 | Wave | Case | Depends on | Resources |
 |---|---|---|---|
@@ -381,7 +428,8 @@ $($rows -join "`n")
             Evidence = $evidence
             Env = $runEnv
             Rehearsal = [bool]$Rehearsal
-            MaxParallel = $MaxParallel
+            MaxParallel = $limit
+            Pools = $pcfg.Pools
             Waves = $waves
             ExternalDependencies = $external
         }

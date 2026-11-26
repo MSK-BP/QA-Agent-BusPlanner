@@ -18,7 +18,7 @@ QA Agent/                          core repository
 │  │  ├─ blocked-patterns.txt      generic patterns; each tenant adds its own
 │  │  └─ audit-log.ps1             logs every command to the tenant's run folder
 │  └─ settings.json                permissions and hook wiring
-├─ .mcp.json                       Playwright browser server
+├─ .mcp.json                       Playwright browser servers (one headed, eight headless)
 ├─ harness/
 │  ├─ setup-machine.ps1            installs Git, Node, Playwright; runs the tenant's setup
 │  ├─ new-tenant.ps1               creates a tenant from the template
@@ -104,7 +104,7 @@ Plain requests route to the same skills as the slash commands.
 
 ## Browser
 
-`.mcp.json` runs the Playwright MCP server (`@playwright/mcp`, pinned in `harness\setup-machine.ps1`) with `node.exe` directly from `%LOCALAPPDATA%\qa-agent\playwright-mcp`. It doesn't depend on `PATH` or `npx`, and `node_modules` stays out of the hub. Settings come from `.local\playwright.json`, which `use-tenant.ps1` builds: installed Chrome, headed, 1440x900, the tenant's blocked origins, and the tenant's run folder as the output folder.
+`.mcp.json` runs the Playwright MCP server (`@playwright/mcp`, pinned in `harness\setup-machine.ps1`) with `node.exe` directly from `%LOCALAPPDATA%\qa-agent\playwright-mcp`. It doesn't depend on `PATH` or `npx`, and `node_modules` stays out of the hub. Settings come from `.local\playwright.json`, which `use-tenant.ps1` builds: installed Chrome, headed, 1440x900, the tenant's blocked origins, and the tenant's run folder as the output folder. The same file also gives eight headless servers, `pw-1` to `pw-8`, through `.local\playwright-pool.json` (identical, but headless). Each is its own isolated browser, so `/run-cases` can run up to eight ui cases at the same time (see `templates/tenant/tests/README.md`, "Running cases in parallel"). The servers start with the session; a browser starts only when a runner first uses it.
 
 `.mcp.json` also adds Atlassian's remote MCP server (`https://mcp.atlassian.com/v2/mcp`) for Jira and Confluence. Each person signs in to it once with their own Atlassian account (`/mcp` in a session); nothing is stored in the hub. It is the same server as the claude.ai Atlassian connector, so either one works.
 

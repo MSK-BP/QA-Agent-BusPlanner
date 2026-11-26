@@ -37,14 +37,33 @@ A person changes an approved case only through a new review. Editing the steps o
 
 ## Running cases in parallel
 
-`/run-cases` plans every run in **waves** (`harness\cases.ps1 -Action new-run`). The cases of one wave run at the same time, at most 4 by default (`-MaxParallel`). Two optional fields in the case front matter drive the plan:
+`/run-cases` plans every run in **waves** (`harness\cases.ps1 -Action new-run`). The cases of one wave run at the same time, up to the limit in `tests/parallel.json` (4 without it, or `-MaxParallel`). Two optional fields in the case front matter drive the plan:
 
 | Field | Value | Meaning |
 |---|---|---|
 | `depends-on` | case IDs, e.g. `[MOD-001]` | Start this case only after those cases passed. Use it when a case needs another case's build, data or end state. |
 | `resources` | `kind:name` items, e.g. `[build:MyRepo, device:Tablet-A]` | No other case may hold the same item at the same time. A bare kind (`device`) means any item of that kind. `exclusive` runs the case alone (timing and load cases). |
 
-Without `resources`, the channel gives a safe default: `ui` holds `browser:session` (all runners in one Claude session share one browser), `device` holds `device` (any device), `cli` holds `build` (any build folder). `api` and `sql` cases hold nothing, so they run in parallel unless they declare a resource, for example the same test-data record (`data:<record>`).
+Without `resources`, the channel gives a safe default: `ui` holds `browser` (one browser), `device` holds `device` (one device), `cli` holds `build` (any build folder). `api` and `sql` cases hold nothing, so they run in parallel unless they declare a resource, for example the same test-data record (`data:<record>`).
+
+**Limits and pools: `tests/parallel.json`** (optional):
+
+```json
+{
+  "maxParallel": 15,
+  "maxParallelByEnv": { "staging": 8 },
+  "pools": {
+    "browser": ["pw-1", "pw-2", "pw-3", "pw-4", "pw-5", "pw-6", "pw-7", "pw-8"],
+    "device": ["Phone-A", "Tablet-B"]
+  },
+  "limits": { "device": 2 }
+}
+```
+
+- `maxParallel`: the most cases at the same time. `maxParallelByEnv` lowers it for a shared environment, so a run is never a load test by accident.
+- `pools`: a case that needs "a browser" or "a device" gets a free slot by name (`browser:pw-3`), and its runner uses only that one. The browser slots are the headless Playwright connections `pw-1` to `pw-8` in the hub's `.mcp.json`; each is its own isolated browser. A case can also name a slot (`device:Tablet-B`).
+- `limits`: an extra cap per kind. The default cap of a pooled kind is its pool size.
+- Without the file: limit 4 and one shared browser (`browser:session`).
 
 `harness\cases.ps1 -Action validate` reports a dependency that is not a case, a circular dependency and a badly formed resource. The plan is written to the run's RUN.md (section Plan).
 

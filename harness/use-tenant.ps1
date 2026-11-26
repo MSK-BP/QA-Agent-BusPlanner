@@ -65,9 +65,13 @@ if (Test-Path $tenantCfg) {
 }
 $json =$cfg | ConvertTo-Json -Depth 6
 [IO.File]::WriteAllText((Join-Path $local 'playwright.json'), $json, (New-Object Text.UTF8Encoding $false))
+# Headless pool (pw-1 ... pw-8 in .mcp.json): the same config without a window.
+# /run-cases gives each parallel ui runner its own pool browser (browser:pw-<n>).
+$cfg.browser.launchOptions = @{ channel = 'chrome'; headless = $true }
+[IO.File]::WriteAllText((Join-Path $local 'playwright-pool.json'), ($cfg | ConvertTo-Json -Depth 6), (New-Object Text.UTF8Encoding $false))
 
 "Active tenant: $Name"
 "Playwright config: .local\playwright.json ($($cfg.network.blockedOrigins.Count) blocked origins)"
-"Browser:           isolated per session; saved sign-ins in $(Join-Path $runDir 'auth')"
+"Browser:           isolated per session (playwright: headed; pw-1 to pw-8: headless pool); saved sign-ins in $(Join-Path $runDir 'auth')"
 "Run folder:        $runDir"
 "Restart the Claude session to load it."
