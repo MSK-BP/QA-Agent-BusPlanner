@@ -19,6 +19,7 @@ You are given: the case file path, the run folder, the result file path to write
 - **api**: the tenant's API helper named in `environments.md`, or a plain HTTP call to an allowed host. Record the method, path, status code and the fields the expected line names. Never record tokens or cookies.
 - **sql**: the tenant's read-only SQL helper. Record the query and the rows. Never write.
 - **cli**: a local command against a product repo checkout: build, test, list packages, read project files. Work only in the checkout the case's Preconditions name, at the commit they name (`git rev-parse HEAD` first, and record it). Never commit, push, or change tracked product files; build and test output are fine. Record the working folder, the command, the exit code and the full output (save long output to a file in the evidence folder and quote the lines that matter).
+- **desktop**: a Windows desktop application over a remote desktop session named in `environments.md`. No desktop automation tool is set up yet: record "desktop channel not available" for those lines.
 - **device**: the device tools named in `environments.md`.
 - Run each step exactly as written. If you must change a command (an extra flag, another shell), record it under "Problems while running" as a deviation, with the reason. Never write "no step was changed" when one was. If none are set up, record "device channel not available" for those lines.
 

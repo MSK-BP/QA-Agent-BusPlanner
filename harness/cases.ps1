@@ -35,7 +35,7 @@
                                every device:<name>. 'exclusive' runs the case alone
                                (timing and load cases).
   Without 'resources', the channels give a safe default: ui -> browser,
-  device -> device, cli -> build. api and sql cases hold nothing by default.
+  device -> device, cli -> build, desktop -> desktop. api and sql cases hold nothing by default.
 
   Optional tenant file tests/parallel.json:
     { "maxParallel": 15,                       overall limit (default 4)
@@ -77,7 +77,7 @@ $utf8 = New-Object Text.UTF8Encoding $false
 $listFields = 'channels', 'roles', 'spec', 'data', 'tags', 'depends-on', 'resources'
 $resourcePattern = '^[a-z][a-z0-9-]*(:[A-Za-z0-9._-]+)?$'
 $statuses = 'draft', 'reviewed', 'approved', 'retired'
-$channelsAllowed = 'ui', 'api', 'sql', 'device', 'cli'
+$channelsAllowed = 'ui', 'api', 'sql', 'device', 'cli', 'desktop'
 
 function Read-FrontMatter([string] $path) {
     $lines = [IO.File]::ReadAllLines($path, [Text.Encoding]::UTF8)
@@ -155,6 +155,7 @@ function Get-Resources($c) {
     if ($c.Channels -contains 'ui' -and $kinds -notcontains 'browser') { $res += 'browser' }
     if ($c.Channels -contains 'device' -and $kinds -notcontains 'device') { $res += 'device' }
     if ($c.Channels -contains 'cli' -and $kinds -notcontains 'build') { $res += 'build' }
+    if ($c.Channels -contains 'desktop' -and $kinds -notcontains 'desktop') { $res += 'desktop' }
     @($res | Select-Object -Unique)
 }
 

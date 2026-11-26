@@ -44,7 +44,7 @@ A person changes an approved case only through a new review. Editing the steps o
 | `depends-on` | case IDs, e.g. `[MOD-001]` | Start this case only after those cases passed. Use it when a case needs another case's build, data or end state. |
 | `resources` | `kind:name` items, e.g. `[build:MyRepo, device:Tablet-A]` | No other case may hold the same item at the same time. A bare kind (`device`) means any item of that kind. `exclusive` runs the case alone (timing and load cases). |
 
-Without `resources`, the channel gives a safe default: `ui` holds `browser` (one browser), `device` holds `device` (one device), `cli` holds `build` (any build folder). `api` and `sql` cases hold nothing, so they run in parallel unless they declare a resource, for example the same test-data record (`data:<record>`).
+Without `resources`, the channel gives a safe default: `ui` holds `browser` (one browser), `device` holds `device` (one device), `cli` holds `build` (any build folder), `desktop` holds `desktop` (one remote desktop session). `api` and `sql` cases hold nothing, so they run in parallel unless they declare a resource, for example the same test-data record (`data:<record>`).
 
 **Limits and pools: `tests/parallel.json`** (optional):
 

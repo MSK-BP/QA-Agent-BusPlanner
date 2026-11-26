@@ -6,7 +6,7 @@ flow: F1                        # sub-folder; use "general" if there are no flow
 ticket:                         # tracker key, if the case comes from a ticket
 priority: P1                    # P1 | P2 | P3
 spec: []                        # requirement or acceptance-criteria IDs this case proves
-channels: [ui, sql]             # ui | api | sql | device | cli: every channel an Expected line uses
+channels: [ui, sql]             # ui | api | sql | device | cli | desktop: every channel an Expected line uses
 roles: [role-name]              # who acts in the UI; one signed-in identity per role
 env: dev                        # lowest allowed environment where the case can run
 data: []                        # named test data it needs (see the tenant's tests/README.md)
@@ -16,7 +16,7 @@ resources: []                   # what no other case may use at the same time: b
                                 # browser:session, data:<record>. Empty = the channel default (see the tests README)
 status: draft                   # draft -> reviewed (agent review) -> approved (a person) -> retired
 approved-by:                    # the person who approved it; required when status is approved
-convert-later:                  # what a coded framework should automate later: ui | api | none
+convert-later:                  # what a coded framework should automate later: ui | api | device | none
 ---
 ## Preconditions
 - The state the system must be in before step 1. Name the test data. Everything the case creates is prefixed QA-AUTO-.
